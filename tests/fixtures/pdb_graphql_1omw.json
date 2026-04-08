@@ -1,0 +1,108 @@
+{
+  "data": {
+    "entries": [
+      {
+        "rcsb_id": "1OMW",
+        "struct": {
+          "title": "Crystal Structure of the complex between G Protein-Coupled Receptor Kinase 2 and Heterotrimeric G Protein beta 1 and gamma 2 subunits"
+        },
+        "audit_author": [
+          {
+            "name": "Lodowski, D.T.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Pitcher, J.A.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Capel, W.D.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Lefkowitz, R.J.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Tesmer, J.J.G.",
+            "identifier_ORCID": null
+          }
+        ],
+        "exptl": [
+          {
+            "method": "X-RAY DIFFRACTION"
+          }
+        ],
+        "rcsb_entry_info": {
+          "resolution_combined": [
+            2.5
+          ]
+        },
+        "struct_keywords": {
+          "pdbx_keywords": "TRANSFERASE",
+          "text": "WD-40 repeat, TRANSFERASE"
+        },
+        "rcsb_accession_info": {
+          "deposit_date": "2003-02-26T00:00:00Z",
+          "initial_release_date": "2003-06-03T00:00:00Z",
+          "revision_date": "2023-08-16T00:00:00Z"
+        },
+        "rcsb_primary_citation": {
+          "pdbx_database_id_DOI": "10.1126/science.1082348",
+          "pdbx_database_id_PubMed": 12764189,
+          "title": "Keeping G proteins at Bay: A Complex Between G Protein-Coupled Receptor Kinase 2 and G-Beta-Gamma",
+          "year": 2003
+        },
+        "database_2": [
+          {
+            "database_id": "PDB",
+            "pdbx_DOI": "10.2210/pdb1omw/pdb"
+          },
+          {
+            "database_id": "RCSB",
+            "pdbx_DOI": null
+          },
+          {
+            "database_id": "WWPDB",
+            "pdbx_DOI": null
+          }
+        ],
+        "polymer_entities": [
+          {
+            "rcsb_id": "1OMW_1",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Bos taurus"
+              }
+            ]
+          },
+          {
+            "rcsb_id": "1OMW_2",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Bos taurus"
+              }
+            ]
+          },
+          {
+            "rcsb_id": "1OMW_3",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Bos taurus"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+"""CLI entry points for search and aggregation."""

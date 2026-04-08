@@ -1,0 +1,174 @@
+{
+  "data": {
+    "id": "10.5281/zenodo.7635478",
+    "type": "dois",
+    "attributes": {
+      "doi": "10.5281/zenodo.7635478",
+      "creators": [
+        {
+          "name": "Padfield, Joseph",
+          "nameType": "Personal",
+          "givenName": "Joseph",
+          "familyName": "Padfield",
+          "affiliation": [
+            {
+              "name": "The National Gallery"
+            }
+          ],
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0002-2572-6428",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        }
+      ],
+      "titles": [
+        {
+          "title": "Dynamic Modeller - Improved data handling"
+        }
+      ],
+      "publisher": {
+        "name": "Zenodo"
+      },
+      "container": {
+        "type": "Series",
+        "identifier": "https://zenodo.org/communities/871034",
+        "identifierType": "URL"
+      },
+      "publicationYear": 2023,
+      "subjects": [
+        {"subject": "mermaid.js"},
+        {"subject": "Interoperability"},
+        {"subject": "FAIR"},
+        {"subject": "Dynamic"},
+        {"subject": "Online Tool"},
+        {"subject": "Modelling"}
+      ],
+      "contributors": [
+        {
+          "name": "Fremout, Wim",
+          "nameType": "Personal",
+          "givenName": "Wim",
+          "familyName": "Fremout",
+          "affiliation": [{"name": "KIK-IRPA"}],
+          "contributorType": "Other",
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0002-1684-377X",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        },
+        {
+          "name": "Sotiropoulou, Sophia",
+          "nameType": "Personal",
+          "givenName": "Sophia",
+          "familyName": "Sotiropoulou",
+          "affiliation": [{"name": "FORTH"}],
+          "contributorType": "Other",
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0001-9146-8474",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        }
+      ],
+      "dates": [
+        {
+          "date": "2023-02-13",
+          "dateType": "Issued"
+        }
+      ],
+      "language": "en",
+      "types": {
+        "ris": "COMP",
+        "bibtex": "misc",
+        "citeproc": "article",
+        "schemaOrg": "SoftwareSourceCode",
+        "resourceTypeGeneral": "Software"
+      },
+      "relatedIdentifiers": [
+        {
+          "relationType": "IsSupplementTo",
+          "relatedIdentifier": "https://github.com/jpadfield/dynamic-modelling/tree/v1.4",
+          "resourceTypeGeneral": "Software",
+          "relatedIdentifierType": "URL"
+        },
+        {
+          "relationType": "Compiles",
+          "relatedIdentifier": "https://research.ng-london.org.uk/modelling",
+          "resourceTypeGeneral": "Other",
+          "relatedIdentifierType": "URL"
+        },
+        {
+          "relationType": "IsVersionOf",
+          "relatedIdentifier": "10.5281/zenodo.4724103",
+          "relatedIdentifierType": "DOI"
+        },
+        {
+          "relationType": "IsPartOf",
+          "relatedIdentifier": "https://zenodo.org/communities/871034",
+          "relatedIdentifierType": "URL"
+        }
+      ],
+      "relatedItems": [],
+      "sizes": [],
+      "formats": [],
+      "version": "v1.4",
+      "rightsList": [
+        {
+          "rights": "GNU General Public License v3.0 or later",
+          "rightsUri": "https://www.gnu.org/licenses/gpl-3.0-standalone.html",
+          "schemeUri": "https://spdx.org/licenses/",
+          "rightsIdentifier": "gpl-3.0+",
+          "rightsIdentifierScheme": "SPDX"
+        },
+        {
+          "rights": "Open Access",
+          "rightsUri": "info:eu-repo/semantics/openAccess"
+        }
+      ],
+      "descriptions": [
+        {
+          "description": "Interactive system converting tab-separated triples or JSON-LD into graphical models using the mermaid library, with enhanced data submission, flowchart conversion, and PNG export capabilities.",
+          "descriptionType": "Abstract"
+        },
+        {
+          "description": "A live version of this tool can be found at: https://research.ng-london.org.uk/modelling/",
+          "descriptionType": "Other"
+        }
+      ],
+      "fundingReferences": [
+        {
+          "awardUri": "info:eu-repo/grantAgreement/EC/H2020/654028/",
+          "awardTitle": "Integrated Platform for the European Research Infrastructure ON Cultural Heritage",
+          "funderName": "European Commission",
+          "awardNumber": "654028",
+          "funderIdentifier": "https://doi.org/10.13039/100010661",
+          "funderIdentifierType": "Crossref Funder ID"
+        },
+        {
+          "awardUri": "info:eu-repo/grantAgreement/EC/H2020/871034/",
+          "awardTitle": "Integrating Platforms for the European Research Infrastructure ON Heritage Science",
+          "funderName": "European Commission",
+          "awardNumber": "871034",
+          "funderIdentifier": "https://doi.org/10.13039/100010661",
+          "funderIdentifierType": "Crossref Funder ID"
+        },
+        {
+          "awardUri": "info:eu-repo/grantAgreement/EC/H2020/823782/",
+          "awardTitle": "Social Sciences & Humanities Open Cloud",
+          "funderName": "European Commission",
+          "awardNumber": "823782",
+          "funderIdentifier": "https://doi.org/10.13039/100010661",
+          "funderIdentifierType": "Crossref Funder ID"
+        }
+      ]
+    }
+  }
+}

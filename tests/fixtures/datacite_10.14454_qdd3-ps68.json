@@ -1,0 +1,78 @@
+{
+    "data": {
+        "id": "10.14454/qdd3-ps68",
+        "type": "dois",
+        "attributes": {
+            "doi": "10.14454/qdd3-ps68",
+            "creators": [
+                {
+                    "name": "DataCite Metadata Working Group",
+                    "nameType": "Organizational",
+                    "givenName": null,
+                    "familyName": null,
+                    "affiliation": [],
+                    "nameIdentifiers": []
+                }
+            ],
+            "titles": [
+                {
+                    "lang": null,
+                    "title": "DataCite Metadata Schema Documentation for the Publication and Citation of Research Data and Other Research Outputs v4.7",
+                    "titleType": null
+                }
+            ],
+            "descriptions": [
+                {
+                    "lang": "en",
+                    "description": "Introduction: About DataCite; About the DataCite Metadata Schema; Version 4.7 Update; Citation. DataCite Metadata Properties: Overview; 1. Identifier; 2. Creator; 3. Title; 4. Publisher; 5. PublicationYear.",
+                    "descriptionType": "TableOfContents"
+                }
+            ],
+            "dates": [
+                {
+                    "date": "2026-03-03",
+                    "dateType": "Issued",
+                    "dateInformation": null
+                }
+            ],
+            "publisher": "DataCite",
+            "subjects": [],
+            "relatedIdentifiers": [
+                {
+                    "schemeUri": null,
+                    "relationType": "Documents",
+                    "relatedIdentifier": "10.14454/28a4-kd32",
+                    "relatedIdentifierType": "DOI"
+                },
+                {
+                    "schemeUri": null,
+                    "relationType": "IsNewVersionOf",
+                    "relatedIdentifier": "10.14454/mzv1-5b55",
+                    "relatedIdentifierType": "DOI"
+                }
+            ],
+            "rightsList": [
+                {
+                    "rights": "Creative Commons Attribution 4.0 International",
+                    "rightsUri": "https://creativecommons.org/licenses/by/4.0/legalcode",
+                    "schemeUri": "https://spdx.org/licenses/",
+                    "rightsIdentifier": "cc-by-4.0",
+                    "rightsIdentifierScheme": "SPDX"
+                }
+            ],
+            "fundingReferences": [],
+            "types": {
+                "ris": "RPRT",
+                "bibtex": "article",
+                "citeproc": "article-journal",
+                "schemaOrg": "ScholarlyArticle",
+                "resourceType": "Documentation",
+                "resourceTypeGeneral": "Text"
+            },
+            "version": "4.7",
+            "language": "en",
+            "schemaVersion": "http://datacite.org/schema/kernel-4",
+            "url": "https://datacite-metadata-schema.readthedocs.io/en/4.7/"
+        }
+    }
+}

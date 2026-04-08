@@ -1,0 +1,190 @@
+{
+    "status": "ok",
+    "message-type": "work",
+    "message-version": "1.0.0",
+    "message": {
+        "indexed": {
+            "date-parts": [[2026, 3, 24]],
+            "date-time": "2026-03-24T00:00:00Z",
+            "timestamp": 1774310400000
+        },
+        "reference-count": 40,
+        "publisher": "American Society for Microbiology",
+        "issue": "8",
+        "license": [
+            {
+                "start": {
+                    "date-parts": [[2025, 8, 13]],
+                    "date-time": "2025-08-13T00:00:00Z",
+                    "timestamp": 1755043200000
+                },
+                "content-version": "vor",
+                "delay-in-days": 0,
+                "URL": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            {
+                "start": {
+                    "date-parts": [[2025, 8, 13]],
+                    "date-time": "2025-08-13T00:00:00Z",
+                    "timestamp": 1755043200000
+                },
+                "content-version": "tdm",
+                "delay-in-days": 0,
+                "URL": "https://journals.asm.org/non-commercial-tdm-license"
+            }
+        ],
+        "funder": [
+            {
+                "name": "Manning Fund for COVID-19 Research at UVVA"
+            },
+            {
+                "DOI": "10.13039/100008222",
+                "name": "Ivy Foundation",
+                "doi-asserted-by": "publisher",
+                "id": [{"id": "10.13039/100008222", "id-type": "DOI", "asserted-by": "publisher"}]
+            },
+            {
+                "name": "The Pendleton Laboratory Fund for Pediatric Infectious Diseases"
+            },
+            {
+                "DOI": "10.13039/100000060",
+                "name": "National Institute of Allergy and Infectious Diseases",
+                "doi-asserted-by": "publisher",
+                "award": ["AI176515"],
+                "id": [{"id": "10.13039/100000060", "id-type": "DOI", "asserted-by": "publisher"}]
+            },
+            {
+                "DOI": "10.13039/100000060",
+                "name": "National Institute of Allergy and Infectious Diseases",
+                "doi-asserted-by": "publisher",
+                "award": ["AI160334"],
+                "id": [{"id": "10.13039/100000060", "id-type": "DOI", "asserted-by": "publisher"}]
+            },
+            {
+                "DOI": "10.13039/100001448",
+                "name": "Alpha-1 Foundation",
+                "doi-asserted-by": "publisher",
+                "award": ["AI178669"],
+                "id": [{"id": "10.13039/100001448", "id-type": "DOI", "asserted-by": "publisher"}]
+            }
+        ],
+        "content-domain": {
+            "domain": ["journals.asm.org"],
+            "crossmark-restriction": true
+        },
+        "short-container-title": ["mBio"],
+        "published-print": {
+            "date-parts": [[2025, 8, 13]]
+        },
+        "abstract": "<jats:title>ABSTRACT</jats:title><jats:sec><jats:title/><jats:p>Many difficult-to-understand clinical features characterize COVID-19 and post-acute sequelae of COVID-19 (PASC or long COVID [LC]). The SARS-CoV-2 Spike protein receptor-binding domain (RBD) binds angiotensin converting enzyme 2 (ACE2) on the surface of host cells to initiate infection.</jats:p></jats:sec><jats:sec><jats:title>IMPORTANCE</jats:title><jats:p>Patients who have had COVID-19 can sometimes have troublesome symptoms, termed post-acute sequelae of COVID-19 (PASC) or long COVID (LC). We show that patients convalescing from COVID-19 also make antibodies that act like ACE2.</jats:p></jats:sec>",
+        "DOI": "10.1128/mbio.01735-25",
+        "type": "journal-article",
+        "created": {
+            "date-parts": [[2025, 7, 22]],
+            "date-time": "2025-07-22T00:00:00Z",
+            "timestamp": 1753142400000
+        },
+        "source": "Crossref",
+        "is-referenced-by-count": 0,
+        "title": [
+            "ACE-2-like enzymatic activity in COVID-19 convalescents with persistent pulmonary symptoms associated with immunoglobulin"
+        ],
+        "prefix": "10.1128",
+        "volume": "16",
+        "author": [
+            {
+                "ORCID": "https://orcid.org/0009-0001-6788-1717",
+                "authenticated-orcid": false,
+                "given": "Yufeng",
+                "family": "Song",
+                "sequence": "first",
+                "affiliation": [
+                    {
+                        "id": [{"id": "https://ror.org/0153tk833", "id-type": "ROR", "asserted-by": "publisher"}],
+                        "name": "Department of Pediatrics, University of Virginia",
+                        "place": ["Charlottesville, USA"]
+                    }
+                ]
+            },
+            {
+                "ORCID": "https://orcid.org/0009-0005-9929-3185",
+                "authenticated-orcid": false,
+                "given": "Frances",
+                "family": "Mehl",
+                "sequence": "additional",
+                "affiliation": [
+                    {
+                        "id": [{"id": "https://ror.org/0153tk833", "id-type": "ROR", "asserted-by": "publisher"}],
+                        "name": "Department of Pediatrics, University of Virginia",
+                        "place": ["Charlottesville, USA"]
+                    }
+                ]
+            },
+            {
+                "given": "Lyndsey M.",
+                "family": "Muehling",
+                "sequence": "additional",
+                "affiliation": [
+                    {
+                        "id": [{"id": "https://ror.org/0153tk833", "id-type": "ROR", "asserted-by": "publisher"}],
+                        "name": "Department of Medicine, University of Virginia",
+                        "place": ["Charlottesville, USA"]
+                    }
+                ]
+            },
+            {
+                "given": "Steven L.",
+                "family": "Zeichner",
+                "sequence": "additional",
+                "affiliation": [
+                    {
+                        "name": "Department of Pediatrics, University of Virginia",
+                        "place": ["Charlottesville, USA"]
+                    }
+                ]
+            }
+        ],
+        "member": "235",
+        "container-title": ["mBio"],
+        "original-title": [],
+        "language": "en",
+        "deposited": {
+            "date-parts": [[2025, 8, 13]],
+            "date-time": "2025-08-13T00:00:00Z",
+            "timestamp": 1755043200000
+        },
+        "score": 1,
+        "resource": {
+            "primary": {
+                "URL": "https://journals.asm.org/doi/10.1128/mbio.01735-25"
+            }
+        },
+        "subtitle": [],
+        "short-title": [],
+        "issued": {
+            "date-parts": [[2025, 8, 13]]
+        },
+        "references-count": 40,
+        "journal-issue": {
+            "issue": "8",
+            "published-print": {"date-parts": [[2025, 8]]}
+        },
+        "URL": "https://doi.org/10.1128/mbio.01735-25",
+        "relation": {
+            "has-preprint": [
+                {
+                    "id-type": "doi",
+                    "id": "10.1101/2025.02.12.25322167",
+                    "asserted-by": "object"
+                }
+            ]
+        },
+        "ISSN": ["2150-7511"],
+        "issn-type": [{"value": "2150-7511", "type": "electronic"}],
+        "subject": [],
+        "published": {
+            "date-parts": [[2025, 8, 13]]
+        },
+        "article-number": "e01735-25"
+    }
+}

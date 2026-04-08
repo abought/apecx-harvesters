@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<PubmedArticleSet>
+<PubmedArticle>
+  <MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual">
+    <PMID Version="1">33594067</PMID>
+    <DateCompleted><Year>2021</Year><Month>02</Month><Day>23</Day></DateCompleted>
+    <Article PubModel="Electronic">
+      <Journal>
+        <ISSN IssnType="Electronic">2041-1723</ISSN>
+        <JournalIssue CitedMedium="Internet">
+          <Volume>12</Volume>
+          <Issue>1</Issue>
+          <PubDate><Year>2021</Year><Month>Feb</Month><Day>16</Day></PubDate>
+        </JournalIssue>
+        <Title>Nature communications</Title>
+        <ISOAbbreviation>Nat Commun</ISOAbbreviation>
+      </Journal>
+      <ArticleTitle>LIGHT/LT&#x3b2;R signaling regulates self-renewal and differentiation of hematopoietic and leukemia stem cells.</ArticleTitle>
+      <Pagination><StartPage>1065</StartPage><MedlinePgn>1065</MedlinePgn></Pagination>
+      <ELocationID EIdType="doi" ValidYN="Y">10.1038/s41467-021-21317-x</ELocationID>
+      <Abstract>
+        <AbstractText>The production of blood cells during steady-state and increased demand depends on the regulation of hematopoietic stem cell (HSC) self-renewal and differentiation. Similarly, the balance between self-renewal and differentiation of leukemia stem cells (LSCs) is crucial in the pathogenesis of leukemia. Here, we document that the TNF receptor superfamily member lymphotoxin-&#x3b2; receptor (LT&#x3b2;R) and its ligand LIGHT regulate quiescence and self-renewal of murine and human HSCs and LSCs.</AbstractText>
+      </Abstract>
+      <AuthorList CompleteYN="Y">
+        <Author ValidYN="Y">
+          <LastName>H&#xf6;pner</LastName>
+          <ForeName>S S</ForeName>
+          <Initials>SS</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+          <AffiliationInfo><Affiliation>Department for BioMedical Research, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Raykova</LastName>
+          <ForeName>Ana</ForeName>
+          <Initials>A</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Radpour</LastName>
+          <ForeName>R</ForeName>
+          <Initials>R</Initials>
+          <Identifier Source="ORCID">0000-0002-5632-7833</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Amrein</LastName>
+          <ForeName>M A</ForeName>
+          <Initials>MA</Initials>
+          <Identifier Source="ORCID">0000-0002-0378-8070</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Koller</LastName>
+          <ForeName>D</ForeName>
+          <Initials>D</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Baerlocher</LastName>
+          <ForeName>G M</ForeName>
+          <Initials>GM</Initials>
+          <AffiliationInfo><Affiliation>Department of Hematology and Central Hematology Laboratory, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Riether</LastName>
+          <ForeName>C</ForeName>
+          <Initials>C</Initials>
+          <Identifier Source="ORCID">0000-0001-7512-513X</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Ochsenbein</LastName>
+          <ForeName>A F</ForeName>
+          <Initials>AF</Initials>
+          <Identifier Source="ORCID">0000-0003-1773-5436</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland. adrian.ochsenbein@insel.ch.</Affiliation></AffiliationInfo>
+        </Author>
+      </AuthorList>
+      <Language>eng</Language>
+      <PublicationTypeList>
+        <PublicationType UI="D016428">Journal Article</PublicationType>
+        <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+      </PublicationTypeList>
+      <ArticleDate DateType="Electronic">
+        <Year>2021</Year><Month>02</Month><Day>16</Day>
+      </ArticleDate>
+    </Article>
+    <MedlineJournalInfo>
+      <Country>England</Country>
+      <MedlineTA>Nat Commun</MedlineTA>
+      <NlmUniqueID>101528555</NlmUniqueID>
+      <ISSNLinking>2041-1723</ISSNLinking>
+    </MedlineJournalInfo>
+    <MeshHeadingList>
+      <MeshHeading><DescriptorName UI="D002454" MajorTopicYN="Y">Cell Differentiation</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D000066673" MajorTopicYN="Y">Cell Self Renewal</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D006412" MajorTopicYN="N">Hematopoietic Stem Cells</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D015464" MajorTopicYN="N">Leukemia, Myelogenous, Chronic, BCR-ABL Positive</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D053259" MajorTopicYN="N">Lymphotoxin beta Receptor</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D053326" MajorTopicYN="N">Tumor Necrosis Factor Ligand Superfamily Member 14</DescriptorName></MeshHeading>
+    </MeshHeadingList>
+    <CoiStatement>The authors declare no competing interests.</CoiStatement>
+  </MedlineCitation>
+  <PubmedData>
+    <History>
+      <PubMedPubDate PubStatus="received"><Year>2018</Year><Month>12</Month><Day>3</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="accepted"><Year>2021</Year><Month>1</Month><Day>17</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="pubmed"><Year>2021</Year><Month>2</Month><Day>18</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+      <PubMedPubDate PubStatus="medline"><Year>2021</Year><Month>2</Month><Day>24</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+    </History>
+    <PublicationStatus>epublish</PublicationStatus>
+    <ArticleIdList>
+      <ArticleId IdType="pubmed">33594067</ArticleId>
+      <ArticleId IdType="pmc">PMC7887212</ArticleId>
+      <ArticleId IdType="doi">10.1038/s41467-021-21317-x</ArticleId>
+      <ArticleId IdType="pii">10.1038/s41467-021-21317-x</ArticleId>
+    </ArticleIdList>
+  </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+  <MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual">
+    <PMID Version="1">32672655</PMID>
+    <Article PubModel="Print-Electronic">
+      <Journal>
+        <ISSN IssnType="Electronic">2212-4438</ISSN>
+        <JournalIssue CitedMedium="Internet">
+          <Volume>9</Volume>
+          <Issue>2</Issue>
+          <PubDate><Year>2020</Year><Month>Jun</Month></PubDate>
+        </JournalIssue>
+        <Title>Journal of the World federation of orthodontists</Title>
+        <ISOAbbreviation>J World Fed Orthod</ISOAbbreviation>
+      </Journal>
+      <ArticleTitle>Involvement of interleukins-17 and -34 in exacerbated orthodontic root resorption by jiggling force during rat experimental tooth movement.</ArticleTitle>
+      <Pagination><StartPage>47</StartPage><EndPage>55</EndPage><MedlinePgn>47-55</MedlinePgn></Pagination>
+      <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.ejwf.2020.04.002</ELocationID>
+      <Abstract>
+        <AbstractText Label="BACKGROUND">Orthodontically induced root resorption (OIRR) is considered as an undesirable and unpredictable sequel of orthodontic treatment. Recent reports demonstrated that interleukin (IL)-17/IL-34, and T cells secrete inflammatory/osteoclastogenic cytokines, which might stimulate osteoclastogenesis/bone resorption. However, little is known about the role played by IL-17/IL-34 in OIRR.</AbstractText>
+        <AbstractText Label="METHODS">Twenty-four 8-week-old male Wistar rats were divided into four groups: control group, optimal force group (10 g), heavy force group (50 g), and jiggling force group (compression and tension, repetition; 10 g). After 7, 14, and 21 days, the expression levels of IL-17 and IL-34 protein in the resorbed cementum were analyzed using immunohistochemical methods.</AbstractText>
+        <AbstractText Label="RESULTS">On day 21, the immunoreactivity for IL-17 and IL-34 in resorbed roots in the jiggling force group was stronger than that in the heavy force and optimal force groups. Moreover, the number of IL-17-positive and IL-34-positive odontoclasts was significantly increased in the jiggling force group compared with those in the other groups on day 21.</AbstractText>
+        <AbstractText Label="CONCLUSIONS">These results suggest that jiggling forces might exacerbate OIRR compared with heavy forces, as evidenced by the increased expression of IL-17 and IL-34 in odontoclasts obtained from resorbed roots.</AbstractText>
+      </Abstract>
+      <AuthorList CompleteYN="Y">
+        <Author ValidYN="Y">
+          <LastName>Ueda</LastName>
+          <ForeName>Masayuki</ForeName>
+          <Initials>M</Initials>
+          <AffiliationInfo><Affiliation>Research Student, Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Hikida</LastName>
+          <ForeName>Takuji</ForeName>
+          <Initials>T</Initials>
+          <AffiliationInfo><Affiliation>Assistant Professor, Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Yamaguchi</LastName>
+          <ForeName>Masaru</ForeName>
+          <Initials>M</Initials>
+          <AffiliationInfo><Affiliation>Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan. Electronic address: yamaguchimasaru3@gmail.com.</Affiliation></AffiliationInfo>
+        </Author>
+      </AuthorList>
+      <Language>eng</Language>
+      <PublicationTypeList>
+        <PublicationType UI="D016428">Journal Article</PublicationType>
+        <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+      </PublicationTypeList>
+      <ArticleDate DateType="Electronic">
+        <Year>2020</Year><Month>05</Month><Day>27</Day>
+      </ArticleDate>
+    </Article>
+    <MedlineJournalInfo>
+      <Country>United States</Country>
+      <MedlineTA>J World Fed Orthod</MedlineTA>
+      <NlmUniqueID>101592569</NlmUniqueID>
+    </MedlineJournalInfo>
+    <MeshHeadingList>
+      <MeshHeading><DescriptorName UI="D020381" MajorTopicYN="N">Interleukin-17</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D012391" MajorTopicYN="Y">Root Resorption</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D014087" MajorTopicYN="Y">Tooth Movement Techniques</DescriptorName></MeshHeading>
+    </MeshHeadingList>
+    <KeywordList Owner="NOTNLM">
+      <Keyword MajorTopicYN="N">IL-17</Keyword>
+      <Keyword MajorTopicYN="N">IL-34</Keyword>
+      <Keyword MajorTopicYN="N">Jiggling force</Keyword>
+      <Keyword MajorTopicYN="N">Orthodontic force</Keyword>
+      <Keyword MajorTopicYN="N">Root resorption</Keyword>
+      <Keyword MajorTopicYN="N">Tooth movement</Keyword>
+    </KeywordList>
+  </MedlineCitation>
+  <PubmedData>
+    <History>
+      <PubMedPubDate PubStatus="received"><Year>2020</Year><Month>2</Month><Day>12</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="accepted"><Year>2020</Year><Month>4</Month><Day>27</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="pubmed"><Year>2020</Year><Month>7</Month><Day>17</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+      <PubMedPubDate PubStatus="medline"><Year>2021</Year><Month>10</Month><Day>12</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+    </History>
+    <PublicationStatus>ppublish</PublicationStatus>
+    <ArticleIdList>
+      <ArticleId IdType="pubmed">32672655</ArticleId>
+      <ArticleId IdType="doi">10.1016/j.ejwf.2020.04.002</ArticleId>
+      <ArticleId IdType="pii">S2212-4438(20)30019-9</ArticleId>
+    </ArticleIdList>
+  </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

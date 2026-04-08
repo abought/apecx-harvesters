@@ -1,0 +1,81 @@
+{
+  "data": {
+    "entries": [
+      {
+        "rcsb_id": "4ZT0",
+        "struct": {
+          "title": "Crystal structure of catalytically-active Streptococcus pyogenes Cas9 in complex with single-guide RNA at 2.9 Angstrom resolution"
+        },
+        "audit_author": [
+          {
+            "name": "Jiang, F.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Doudna, J.A.",
+            "identifier_ORCID": null
+          }
+        ],
+        "exptl": [
+          {
+            "method": "X-RAY DIFFRACTION"
+          }
+        ],
+        "rcsb_entry_info": {
+          "resolution_combined": [
+            2.9
+          ]
+        },
+        "struct_keywords": {
+          "pdbx_keywords": "HYDROLASE/RNA",
+          "text": "CRISPR-Cas9, bacteria adaptive immunity, DNA endonuclease, HYDROLASE-RNA complex, genome editing and regulation"
+        },
+        "rcsb_accession_info": {
+          "deposit_date": "2015-05-14T00:00:00Z",
+          "initial_release_date": "2015-07-08T00:00:00Z",
+          "revision_date": "2024-11-06T00:00:00Z"
+        },
+        "rcsb_primary_citation": {
+          "pdbx_database_id_DOI": "10.1126/science.aab1452",
+          "pdbx_database_id_PubMed": 26113724,
+          "title": "A Cas9-guide RNA complex preorganized for target DNA recognition.",
+          "year": 2015
+        },
+        "database_2": [
+          {
+            "database_id": "PDB",
+            "pdbx_DOI": "10.2210/pdb4zt0/pdb"
+          },
+          {
+            "database_id": "WWPDB",
+            "pdbx_DOI": null
+          }
+        ],
+        "polymer_entities": [
+          {
+            "rcsb_id": "4ZT0_2",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "RNA"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Streptococcus pyogenes"
+              }
+            ]
+          },
+          {
+            "rcsb_id": "4ZT0_1",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Streptococcus pyogenes"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

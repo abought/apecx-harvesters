@@ -1,0 +1,93 @@
+{
+  "data": {
+    "entries": [
+      {
+        "rcsb_id": "6M0J",
+        "struct": {
+          "title": "Crystal structure of SARS-CoV-2 spike receptor-binding domain bound with ACE2"
+        },
+        "audit_author": [
+          {
+            "name": "Wang, X.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Lan, J.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Ge, J.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Yu, J.",
+            "identifier_ORCID": null
+          },
+          {
+            "name": "Shan, S.",
+            "identifier_ORCID": null
+          }
+        ],
+        "exptl": [
+          {
+            "method": "X-RAY DIFFRACTION"
+          }
+        ],
+        "rcsb_entry_info": {
+          "resolution_combined": [
+            2.45
+          ]
+        },
+        "struct_keywords": {
+          "pdbx_keywords": "VIRAL PROTEIN/HYDROLASE",
+          "text": "spike, receptor binding, VIRAL PROTEIN-HYDROLASE complex"
+        },
+        "rcsb_accession_info": {
+          "deposit_date": "2020-02-21T00:00:00Z",
+          "initial_release_date": "2020-03-18T00:00:00Z",
+          "revision_date": "2024-10-23T00:00:00Z"
+        },
+        "rcsb_primary_citation": {
+          "pdbx_database_id_DOI": "10.1038/s41586-020-2180-5",
+          "pdbx_database_id_PubMed": 32225176,
+          "title": "Structure of the SARS-CoV-2 spike receptor-binding domain bound to the ACE2 receptor.",
+          "year": 2020
+        },
+        "database_2": [
+          {
+            "database_id": "PDB",
+            "pdbx_DOI": "10.2210/pdb6m0j/pdb"
+          },
+          {
+            "database_id": "WWPDB",
+            "pdbx_DOI": null
+          }
+        ],
+        "polymer_entities": [
+          {
+            "rcsb_id": "6M0J_1",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Homo sapiens"
+              }
+            ]
+          },
+          {
+            "rcsb_id": "6M0J_2",
+            "entity_poly": {
+              "rcsb_entity_polymer_type": "Protein"
+            },
+            "rcsb_entity_source_organism": [
+              {
+                "scientific_name": "Severe acute respiratory syndrome coronavirus 2"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

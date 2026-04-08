@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal PMC JATS fixture for PMC7887212 (PMID 33594067).
+     Contains only the front matter needed to exercise parse_pmc_abstract.
+     Abstract text is from the published article (Nature Commun. 12:1065, 2021). -->
+<article>
+  <front>
+    <article-meta>
+      <abstract>
+        <p>The production of blood cells during steady-state and increased demand depends on the regulation of hematopoietic stem cell (HSC) self-renewal and differentiation. Similarly, the balance between self-renewal and differentiation of leukemia stem cells (LSCs) is crucial in the pathogenesis of leukemia. Here, we document that the TNF receptor superfamily member lymphotoxin-&#x3b2; receptor (LT&#x3b2;R) and its ligand LIGHT regulate quiescence and self-renewal of murine and human HSCs and LSCs. Cell-autonomous LIGHT/LT&#x3b2;R signaling reduces cell cycling, promotes symmetric cell division and prevents primitive HSCs from exhaustion in serial re-transplantation experiments and genotoxic stress. LT&#x3b2;R deficiency reduces numbers of LSCs and prolongs survival in a murine chronic myeloid leukemia (CML) model. Similarly, LIGHT/LT&#x3b2;R signaling results in increased human HSCs in colony forming capacity in vitro. Thus, our results define LIGHT/LT&#x3b2;R signaling as an important pathway in the regulation of self-renewal and differentiation of HSCs and LSCs.</p>
+      </abstract>
+      <abstract abstract-type="graphical">
+        <p>This graphical abstract should be ignored by the parser.</p>
+      </abstract>
+    </article-meta>
+  </front>
+</article>

@@ -1,0 +1,116 @@
+{
+    "status": "ok",
+    "message-type": "work",
+    "message-version": "1.0.0",
+    "message": {
+        "institution": [
+            {
+                "name": "medRxiv"
+            }
+        ],
+        "indexed": {
+            "date-parts": [[2026, 3, 24]],
+            "date-time": "2026-03-24T12:42:26Z",
+            "timestamp": 1774356146185
+        },
+        "posted": {
+            "date-parts": [[2020, 9, 10]]
+        },
+        "group-title": "Infectious Diseases (except HIV/AIDS)",
+        "reference-count": 50,
+        "publisher": "openRxiv",
+        "content-domain": {
+            "domain": [],
+            "crossmark-restriction": false
+        },
+        "short-container-title": [],
+        "accepted": {
+            "date-parts": [[2020, 9, 10]]
+        },
+        "abstract": "<jats:p>The durability of infection-induced SARS-CoV-2 immunity has major implications for public health mitigation and vaccine development. Animal studies<jats:sup>1,2</jats:sup> and the scarcity of confirmed re-infection<jats:sup>3</jats:sup> suggests immune protection is likely.</jats:p>",
+        "DOI": "10.1101/2020.09.09.20191205",
+        "type": "posted-content",
+        "created": {
+            "date-parts": [[2020, 9, 10]],
+            "date-time": "2020-09-10T12:06:04Z",
+            "timestamp": 1599739564000
+        },
+        "source": "Crossref",
+        "is-referenced-by-count": 5,
+        "title": [
+            "Evolution of immunity to SARS-CoV-2"
+        ],
+        "prefix": "10.64898",
+        "author": [
+            {
+                "given": "Adam K.",
+                "family": "Wheatley",
+                "sequence": "first",
+                "affiliation": []
+            },
+            {
+                "ORCID": "https://orcid.org/0000-0002-9072-1017",
+                "authenticated-orcid": false,
+                "given": "Jennifer A.",
+                "family": "Juno",
+                "sequence": "additional",
+                "affiliation": []
+            },
+            {
+                "given": "Jing J.",
+                "family": "Wang",
+                "sequence": "additional",
+                "affiliation": []
+            },
+            {
+                "given": "Stephen J.",
+                "family": "Kent",
+                "sequence": "additional",
+                "affiliation": []
+            }
+        ],
+        "member": "54368",
+        "container-title": [],
+        "original-title": [],
+        "link": [
+            {
+                "URL": "https://syndication.highwire.org/content/doi/10.1101/2020.09.09.20191205",
+                "content-type": "unspecified",
+                "content-version": "vor",
+                "intended-application": "similarity-checking"
+            }
+        ],
+        "deposited": {
+            "date-parts": [[2026, 1, 15]],
+            "date-time": "2026-01-15T13:53:50Z",
+            "timestamp": 1768485230000
+        },
+        "score": 1,
+        "resource": {
+            "primary": {
+                "URL": "http://medrxiv.org/lookup/doi/10.1101/2020.09.09.20191205"
+            }
+        },
+        "subtitle": [],
+        "short-title": [],
+        "issued": {
+            "date-parts": [[2020, 9, 10]]
+        },
+        "references-count": 50,
+        "URL": "https://doi.org/10.1101/2020.09.09.20191205",
+        "relation": {
+            "is-preprint-of": [
+                {
+                    "id-type": "doi",
+                    "id": "10.1038/s41467-021-21444-5",
+                    "asserted-by": "subject"
+                }
+            ]
+        },
+        "subject": [],
+        "published": {
+            "date-parts": [[2020, 9, 10]]
+        },
+        "subtype": "preprint"
+    }
+}

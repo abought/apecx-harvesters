@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+  <MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual">
+    <PMID Version="1">32672655</PMID>
+    <Article PubModel="Print-Electronic">
+      <Journal>
+        <ISSN IssnType="Electronic">2212-4438</ISSN>
+        <JournalIssue CitedMedium="Internet">
+          <Volume>9</Volume>
+          <Issue>2</Issue>
+          <PubDate><Year>2020</Year><Month>Jun</Month></PubDate>
+        </JournalIssue>
+        <Title>Journal of the World federation of orthodontists</Title>
+        <ISOAbbreviation>J World Fed Orthod</ISOAbbreviation>
+      </Journal>
+      <ArticleTitle>Involvement of interleukins-17 and -34 in exacerbated orthodontic root resorption by jiggling force during rat experimental tooth movement.</ArticleTitle>
+      <Pagination><StartPage>47</StartPage><EndPage>55</EndPage><MedlinePgn>47-55</MedlinePgn></Pagination>
+      <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.ejwf.2020.04.002</ELocationID>
+      <Abstract>
+        <AbstractText Label="BACKGROUND">Orthodontically induced root resorption (OIRR) is considered as an undesirable and unpredictable sequel of orthodontic treatment. Recent reports demonstrated that interleukin (IL)-17/IL-34, and T cells secrete inflammatory/osteoclastogenic cytokines, which might stimulate osteoclastogenesis/bone resorption. However, little is known about the role played by IL-17/IL-34 in OIRR.</AbstractText>
+        <AbstractText Label="METHODS">Twenty-four 8-week-old male Wistar rats were divided into four groups: control group, optimal force group (10 g), heavy force group (50 g), and jiggling force group (compression and tension, repetition; 10 g). After 7, 14, and 21 days, the expression levels of IL-17 and IL-34 protein in the resorbed cementum were analyzed using immunohistochemical methods.</AbstractText>
+        <AbstractText Label="RESULTS">On day 21, the immunoreactivity for IL-17 and IL-34 in resorbed roots in the jiggling force group was stronger than that in the heavy force and optimal force groups. Moreover, the number of IL-17-positive and IL-34-positive odontoclasts was significantly increased in the jiggling force group compared with those in the other groups on day 21.</AbstractText>
+        <AbstractText Label="CONCLUSIONS">These results suggest that jiggling forces might exacerbate OIRR compared with heavy forces, as evidenced by the increased expression of IL-17 and IL-34 in odontoclasts obtained from resorbed roots.</AbstractText>
+      </Abstract>
+      <AuthorList CompleteYN="Y">
+        <Author ValidYN="Y">
+          <LastName>Ueda</LastName>
+          <ForeName>Masayuki</ForeName>
+          <Initials>M</Initials>
+          <AffiliationInfo><Affiliation>Research Student, Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Hikida</LastName>
+          <ForeName>Takuji</ForeName>
+          <Initials>T</Initials>
+          <AffiliationInfo><Affiliation>Assistant Professor, Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Yamaguchi</LastName>
+          <ForeName>Masaru</ForeName>
+          <Initials>M</Initials>
+          <AffiliationInfo><Affiliation>Department of Orthodontics, Nihon University School of Dentistry at Matsudo, Chiba, Japan. Electronic address: yamaguchimasaru3@gmail.com.</Affiliation></AffiliationInfo>
+        </Author>
+      </AuthorList>
+      <Language>eng</Language>
+      <PublicationTypeList>
+        <PublicationType UI="D016428">Journal Article</PublicationType>
+        <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+      </PublicationTypeList>
+      <ArticleDate DateType="Electronic">
+        <Year>2020</Year><Month>05</Month><Day>27</Day>
+      </ArticleDate>
+    </Article>
+    <MedlineJournalInfo>
+      <Country>United States</Country>
+      <MedlineTA>J World Fed Orthod</MedlineTA>
+      <NlmUniqueID>101592569</NlmUniqueID>
+    </MedlineJournalInfo>
+    <MeshHeadingList>
+      <MeshHeading><DescriptorName UI="D020381" MajorTopicYN="N">Interleukin-17</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D012391" MajorTopicYN="Y">Root Resorption</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D014087" MajorTopicYN="Y">Tooth Movement Techniques</DescriptorName></MeshHeading>
+    </MeshHeadingList>
+    <KeywordList Owner="NOTNLM">
+      <Keyword MajorTopicYN="N">IL-17</Keyword>
+      <Keyword MajorTopicYN="N">IL-34</Keyword>
+      <Keyword MajorTopicYN="N">Jiggling force</Keyword>
+      <Keyword MajorTopicYN="N">Orthodontic force</Keyword>
+      <Keyword MajorTopicYN="N">Root resorption</Keyword>
+      <Keyword MajorTopicYN="N">Tooth movement</Keyword>
+    </KeywordList>
+  </MedlineCitation>
+  <PubmedData>
+    <History>
+      <PubMedPubDate PubStatus="received"><Year>2020</Year><Month>2</Month><Day>12</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="accepted"><Year>2020</Year><Month>4</Month><Day>27</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="pubmed"><Year>2020</Year><Month>7</Month><Day>17</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+      <PubMedPubDate PubStatus="medline"><Year>2021</Year><Month>10</Month><Day>12</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+    </History>
+    <PublicationStatus>ppublish</PublicationStatus>
+    <ArticleIdList>
+      <ArticleId IdType="pubmed">32672655</ArticleId>
+      <ArticleId IdType="doi">10.1016/j.ejwf.2020.04.002</ArticleId>
+      <ArticleId IdType="pii">S2212-4438(20)30019-9</ArticleId>
+    </ArticleIdList>
+  </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

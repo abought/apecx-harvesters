@@ -1,0 +1,146 @@
+{
+    "emdb_id": "EMD-74041",
+    "admin": {
+        "authors_list": {
+            "author": [
+                {"instance_type": "author", "valueOf_": "Choi KY"},
+                {"instance_type": "author", "valueOf_": "Lin X"},
+                {"instance_type": "author", "valueOf_": "Cheng Y"},
+                {"instance_type": "author", "valueOf_": "Julius D"}
+            ]
+        },
+        "current_status": {
+            "code": {"valueOf_": "REL"},
+            "date": "2026-03-25T00:00:00",
+            "processing_site": "RCSB"
+        },
+        "grant_support": {
+            "grant_reference": [
+                {
+                    "country": "United States",
+                    "funding_body": "Howard Hughes Medical Institute (HHMI)",
+                    "instance_type": "grant_reference"
+                },
+                {
+                    "code": "R35NS105038",
+                    "country": "United States",
+                    "funding_body": "National Institutes of Health/National Institute of Neurological Disorders and Stroke (NIH/NINDS)",
+                    "instance_type": "grant_reference"
+                },
+                {
+                    "code": "R35GM140847",
+                    "country": "United States",
+                    "funding_body": "National Institutes of Health/National Institute of General Medical Sciences (NIH/NIGMS)",
+                    "instance_type": "grant_reference"
+                }
+            ]
+        },
+        "key_dates": {
+            "deposition": "2025-11-24T00:00:00",
+            "header_release": "2026-03-25T00:00:00",
+            "map_release": "2026-03-25T00:00:00",
+            "update": "2026-03-25T00:00:00"
+        },
+        "keywords": "TRPM8, transient receptor potential melastatin 8, MEMBRANE PROTEIN",
+        "title": "Human TRPM8 V915Y fully-swapped, closed, ligand-free structure resolved in GDN"
+    },
+    "crossreferences": {
+        "citation_list": {
+            "primary_citation": {
+                "citation_type": {
+                    "author": [
+                        {
+                            "ORCID": "0000-0001-9299-3924",
+                            "instance_type": "author",
+                            "order": 1,
+                            "valueOf_": "Choi KY"
+                        },
+                        {
+                            "ORCID": "0000-0001-5356-9135",
+                            "instance_type": "author",
+                            "order": 2,
+                            "valueOf_": "Lin X"
+                        },
+                        {
+                            "ORCID": "0000-0001-9535-0369",
+                            "instance_type": "author",
+                            "order": 3,
+                            "valueOf_": "Cheng Y"
+                        },
+                        {
+                            "ORCID": "0000-0002-6365-4867",
+                            "instance_type": "author",
+                            "order": 4,
+                            "valueOf_": "Julius D"
+                        }
+                    ],
+                    "external_references": [
+                        {
+                            "instance_type": "external_references",
+                            "type_": "DOI",
+                            "valueOf_": "doi:10.1038/s41586-026-10276-2"
+                        },
+                        {
+                            "instance_type": "external_references",
+                            "type_": "ISSN",
+                            "valueOf_": "1476-4687"
+                        }
+                    ],
+                    "journal": "Nature",
+                    "published": true,
+                    "title": "Structural energetics of cold sensitivity",
+                    "year": "2026"
+                }
+            }
+        },
+        "pdb_list": {
+            "pdb_reference": [
+                {
+                    "instance_type": "pdb_reference",
+                    "pdb_id": "9zcu",
+                    "relationship": {"in_frame": "FULLOVERLAP"}
+                }
+            ]
+        }
+    },
+    "sample": {
+        "name": {
+            "valueOf_": "Homotetrameric complex of human TRPM8 V915Y determined in a cell-derived vesicles."
+        }
+    },
+    "structure_determination_list": {
+        "structure_determination": [
+            {
+                "aggregation_state": "particle",
+                "image_processing": [
+                    {
+                        "final_reconstruction": {
+                            "applied_symmetry": {"point_group": "C4"},
+                            "resolution": {
+                                "res_type": "BY AUTHOR",
+                                "units": "\u212b",
+                                "valueOf_": "2.86"
+                            },
+                            "resolution_method": "FSC 0.143 CUT-OFF"
+                        },
+                        "instance_type": "singleparticle_processing"
+                    }
+                ],
+                "instance_type": "structure_determination",
+                "method": "singleParticle",
+                "microscopy_list": {
+                    "microscopy": [
+                        {
+                            "acceleration_voltage": {"units": "kV", "valueOf_": "300"},
+                            "instance_type": "single_particle_microscopy",
+                            "microscope": "TFS KRIOS",
+                            "microscopy_id": 1
+                        }
+                    ]
+                },
+                "structure_determination_id": 1
+            }
+        ]
+    },
+    "version": "3.0.11.0"
+}

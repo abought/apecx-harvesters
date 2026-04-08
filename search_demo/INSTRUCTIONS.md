@@ -1,0 +1,20 @@
+## Search demo instruction
+
+The purpose of this demo is to demonstrate the LLMs can do interesting things when given a clean and harmonized search index.
+
+Using a published schema of fields and a well-documented query API, your task is to propose interesting and scientifically relevant search queries, and to generate scripts for working with the results. 
+
+Some of these search response payloads may be very big. As the LLM, you are encouraged to consider the most efficient way to process results. For example, it may make sense to write small fragments of python code to grab key fields, rather than loading the entire json payload into the LLM.
+
+## References
+### How to construct a query
+* The Globus Search query schema: https://docs.globus.org/api/search/reference/post_query/
+* The Globus search python SDK docs for the SearchClient can be used to write python scripts that capture the search logic in a reproducible way: https://globus-sdk-python.readthedocs.io/en/stable/services/search.html
+
+### Sources of data to use
+The search index sources data from several [well-known scientific repository APIs](../design/API_REFERENCE.md). Some harmonization is applied to comply with the Datacite 4.7 Schema.
+
+* The globus search index ID to query is: `e74bf12a-d0dd-4d19-a965-03f4936db851`
+  * This is a public search index; no authentication is required
+* The schema for our search collection is defined in `schema/simplified_schema.json`. This is the master guide to the meaning of fields.
+* All of our models (pdb, pubmed, etc) reference well-defined scientific APIs, and field names for specialist sub-schemas map to those apis. Consult `API_REFERENCE.md` if you need more detailed documentation for those fields.

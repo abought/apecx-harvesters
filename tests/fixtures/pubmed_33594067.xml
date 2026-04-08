@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+  <MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual">
+    <PMID Version="1">33594067</PMID>
+    <DateCompleted><Year>2021</Year><Month>02</Month><Day>23</Day></DateCompleted>
+    <Article PubModel="Electronic">
+      <Journal>
+        <ISSN IssnType="Electronic">2041-1723</ISSN>
+        <JournalIssue CitedMedium="Internet">
+          <Volume>12</Volume>
+          <Issue>1</Issue>
+          <PubDate><Year>2021</Year><Month>Feb</Month><Day>16</Day></PubDate>
+        </JournalIssue>
+        <Title>Nature communications</Title>
+        <ISOAbbreviation>Nat Commun</ISOAbbreviation>
+      </Journal>
+      <ArticleTitle>LIGHT/LT&#x3b2;R signaling regulates self-renewal and differentiation of hematopoietic and leukemia stem cells.</ArticleTitle>
+      <Pagination><StartPage>1065</StartPage><MedlinePgn>1065</MedlinePgn></Pagination>
+      <ELocationID EIdType="doi" ValidYN="Y">10.1038/s41467-021-21317-x</ELocationID>
+      <Abstract>
+        <AbstractText>The production of blood cells during steady-state and increased demand depends on the regulation of hematopoietic stem cell (HSC) self-renewal and differentiation. Similarly, the balance between self-renewal and differentiation of leukemia stem cells (LSCs) is crucial in the pathogenesis of leukemia. Here, we document that the TNF receptor superfamily member lymphotoxin-&#x3b2; receptor (LT&#x3b2;R) and its ligand LIGHT regulate quiescence and self-renewal of murine and human HSCs and LSCs.</AbstractText>
+      </Abstract>
+      <AuthorList CompleteYN="Y">
+        <Author ValidYN="Y">
+          <LastName>H&#xf6;pner</LastName>
+          <ForeName>S S</ForeName>
+          <Initials>SS</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+          <AffiliationInfo><Affiliation>Department for BioMedical Research, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Raykova</LastName>
+          <ForeName>Ana</ForeName>
+          <Initials>A</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Radpour</LastName>
+          <ForeName>R</ForeName>
+          <Initials>R</Initials>
+          <Identifier Source="ORCID">0000-0002-5632-7833</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Amrein</LastName>
+          <ForeName>M A</ForeName>
+          <Initials>MA</Initials>
+          <Identifier Source="ORCID">0000-0002-0378-8070</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Koller</LastName>
+          <ForeName>D</ForeName>
+          <Initials>D</Initials>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Baerlocher</LastName>
+          <ForeName>G M</ForeName>
+          <Initials>GM</Initials>
+          <AffiliationInfo><Affiliation>Department of Hematology and Central Hematology Laboratory, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Riether</LastName>
+          <ForeName>C</ForeName>
+          <Initials>C</Initials>
+          <Identifier Source="ORCID">0000-0001-7512-513X</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland.</Affiliation></AffiliationInfo>
+        </Author>
+        <Author ValidYN="Y">
+          <LastName>Ochsenbein</LastName>
+          <ForeName>A F</ForeName>
+          <Initials>AF</Initials>
+          <Identifier Source="ORCID">0000-0003-1773-5436</Identifier>
+          <AffiliationInfo><Affiliation>Department of Medical Oncology, Inselspital, Bern University Hospital, University of Bern, Bern, Switzerland. adrian.ochsenbein@insel.ch.</Affiliation></AffiliationInfo>
+        </Author>
+      </AuthorList>
+      <Language>eng</Language>
+      <PublicationTypeList>
+        <PublicationType UI="D016428">Journal Article</PublicationType>
+        <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+      </PublicationTypeList>
+      <ArticleDate DateType="Electronic">
+        <Year>2021</Year><Month>02</Month><Day>16</Day>
+      </ArticleDate>
+    </Article>
+    <MedlineJournalInfo>
+      <Country>England</Country>
+      <MedlineTA>Nat Commun</MedlineTA>
+      <NlmUniqueID>101528555</NlmUniqueID>
+      <ISSNLinking>2041-1723</ISSNLinking>
+    </MedlineJournalInfo>
+    <MeshHeadingList>
+      <MeshHeading><DescriptorName UI="D002454" MajorTopicYN="Y">Cell Differentiation</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D000066673" MajorTopicYN="Y">Cell Self Renewal</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D006412" MajorTopicYN="N">Hematopoietic Stem Cells</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D015464" MajorTopicYN="N">Leukemia, Myelogenous, Chronic, BCR-ABL Positive</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D053259" MajorTopicYN="N">Lymphotoxin beta Receptor</DescriptorName></MeshHeading>
+      <MeshHeading><DescriptorName UI="D053326" MajorTopicYN="N">Tumor Necrosis Factor Ligand Superfamily Member 14</DescriptorName></MeshHeading>
+    </MeshHeadingList>
+    <CoiStatement>The authors declare no competing interests.</CoiStatement>
+  </MedlineCitation>
+  <PubmedData>
+    <History>
+      <PubMedPubDate PubStatus="received"><Year>2018</Year><Month>12</Month><Day>3</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="accepted"><Year>2021</Year><Month>1</Month><Day>17</Day></PubMedPubDate>
+      <PubMedPubDate PubStatus="pubmed"><Year>2021</Year><Month>2</Month><Day>18</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+      <PubMedPubDate PubStatus="medline"><Year>2021</Year><Month>2</Month><Day>24</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate>
+    </History>
+    <PublicationStatus>epublish</PublicationStatus>
+    <ArticleIdList>
+      <ArticleId IdType="pubmed">33594067</ArticleId>
+      <ArticleId IdType="pmc">PMC7887212</ArticleId>
+      <ArticleId IdType="doi">10.1038/s41467-021-21317-x</ArticleId>
+      <ArticleId IdType="pii">10.1038/s41467-021-21317-x</ArticleId>
+    </ArticleIdList>
+  </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

@@ -1,0 +1,44 @@
+{
+    "messages": [
+        {
+            "status": "ok",
+            "category": "all"
+        }
+    ],
+    "collection": [
+        {
+            "title": "Evolution of immunity to SARS-CoV-2",
+            "authors": "Wheatley, A. K.; Juno, J. A.; Wang, J. J.; Selva, K. J.; Reynaldi, A.; Tan, H.-X.; Lee, W. S.; Wragg, K. M.; Kelly, H. G.; Esterbauer, R.; Davis, S. K.; Kent, H. E.; Mordant, F. L.; Schlub, T. E.; Gordon, D. L.; Khoury, D. S.; Subbarao, K.; Cromer, D.; Gordon, T. P.; Chung, A. W.; Davenport, M. P.; Kent, S. J.",
+            "author_corresponding": "Stephen J Kent",
+            "author_corresponding_institution": "University of Melbourne",
+            "doi": "10.1101/2020.09.09.20191205",
+            "date": "2020-09-10",
+            "version": "1",
+            "type": "PUBLISHAHEADOFPRINT",
+            "license": "cc_no",
+            "category": "infectious diseases",
+            "jatsxml": "https://www.medrxiv.org/content/early/2020/09/10/2020.09.09.20191205.source.xml",
+            "abstract": "The durability of infection-induced SARS-CoV-2 immunity has major implications for public health mitigation and vaccine development. Animal studies1,2 and the scarcity of confirmed re-infection3 suggests immune protection is likely, although the durability of this protection is debated. Lasting immunity following acute viral infection requires maintenance of both serum antibody and antigen-specific memory B and T lymphocytes and is notoriously pathogen specific, ranging from life-long for smallpox or measles4, to highly transient for common cold coronaviruses (CCC)5. Neutralising antibody responses are a likely correlate of protective immunity and exclusively recognise the viral spike (S) protein, predominantly targeting the receptor binding domain (RBD) within the S1 sub-domain6. Multiple reports describe waning of S-specific antibodies in the first 2-3 months following infection7-12. However, extrapolation of early linear trends in decay might be overly pessimistic, with several groups reporting that serum neutralisation is stable over time in a proportion of convalescent subjects8,12-17. While SARS-CoV-2 specific B and T cell responses are readily induced by infection6,13,18-24, the longitudinal dynamics of these key memory populations remains poorly resolved. Here we comprehensively profiled antibody, B and T cell dynamics over time in a cohort recovered from mild-moderate COVID-19. We find that binding and neutralising antibody responses, together with individual serum clonotypes, decay over the first 4 months post-infection, as expected, with a similar decline in S-specific CD4+ and circulating T follicular helper (cTFH) frequencies. In contrast, S-specific IgG+ memory B cells (MBC) consistently accumulate over time, eventually comprising a significant fraction of circulating MBC. Modelling of the concomitant immune kinetics predicts maintenance of serological neutralising activity above a titre of 1:40 in 50% of convalescent subjects to 74 days, with probable additive protection from B and T cells. Overall, our study suggests SARS-CoV-2 immunity after infection is likely to be transiently protective at a population level. SARS-CoV-2 vaccines may require greater immunogenicity and durability than natural infection to drive long-term protection.",
+            "funder": "NA",
+            "published": "10.1038/s41467-021-21444-5",
+            "server": "medRxiv"
+        },
+        {
+            "title": "Evolution of immunity to SARS-CoV-2",
+            "authors": "Wheatley, A. K.; Juno, J. A.; Wang, J. J.; Selva, K. J.; Reynaldi, A.; Tan, H.-X.; Lee, W. S.; Wragg, K. M.; Kelly, H. G.; Esterbauer, R.; Davis, S. K.; Kent, H. E.; Mordant, F. L.; Schlub, T. E.; Gordon, D. L.; Khoury, D. S.; Subbarao, K.; Cromer, D.; Gordon, T. P.; Chung, A. W.; Davenport, M. P.; Kent, S. J.",
+            "author_corresponding": "Stephen J Kent",
+            "author_corresponding_institution": "University of Melbourne",
+            "doi": "10.1101/2020.09.09.20191205",
+            "date": "2020-09-11",
+            "version": "2",
+            "type": "PUBLISHAHEADOFPRINT",
+            "license": "cc_no",
+            "category": "infectious diseases",
+            "jatsxml": "https://www.medrxiv.org/content/early/2020/09/11/2020.09.09.20191205.source.xml",
+            "abstract": "The durability of infection-induced SARS-CoV-2 immunity has major implications for public health mitigation and vaccine development. Animal studies1,2 and the scarcity of confirmed re-infection3 suggests immune protection is likely, although the durability of this protection is debated. Lasting immunity following acute viral infection requires maintenance of both serum antibody and antigen-specific memory B and T lymphocytes and is notoriously pathogen specific, ranging from life-long for smallpox or measles4, to highly transient for common cold coronaviruses (CCC)5. Neutralising antibody responses are a likely correlate of protective immunity and exclusively recognise the viral spike (S) protein, predominantly targeting the receptor binding domain (RBD) within the S1 sub-domain6. Multiple reports describe waning of S-specific antibodies in the first 2-3 months following infection7-12. However, extrapolation of early linear trends in decay might be overly pessimistic, with several groups reporting that serum neutralisation is stable over time in a proportion of convalescent subjects8,12-17. While SARS-CoV-2 specific B and T cell responses are readily induced by infection6,13,18-24, the longitudinal dynamics of these key memory populations remains poorly resolved. Here we comprehensively profiled antibody, B and T cell dynamics over time in a cohort recovered from mild-moderate COVID-19. We find that binding and neutralising antibody responses, together with individual serum clonotypes, decay over the first 4 months post-infection, as expected, with a similar decline in S-specific CD4+ and circulating T follicular helper (cTFH) frequencies. In contrast, S-specific IgG+ memory B cells (MBC) consistently accumulate over time, eventually comprising a significant fraction of circulating MBC. Modelling of the concomitant immune kinetics predicts maintenance of serological neutralising activity above a titre of 1:40 in 50% of convalescent subjects to 74 days, with probable additive protection from B and T cells. Overall, our study suggests SARS-CoV-2 immunity after infection is likely to be transiently protective at a population level. SARS-CoV-2 vaccines may require greater immunogenicity and durability than natural infection to drive long-term protection.",
+            "funder": "NA",
+            "published": "10.1038/s41467-021-21444-5",
+            "server": "medRxiv"
+        }
+    ]
+}
