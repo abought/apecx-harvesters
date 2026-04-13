@@ -3,3 +3,6 @@
 
 .cache/
 output/
+
+# Keep YOC's scripts for reference, but do not share them on github
+prior_art/
