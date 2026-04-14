@@ -58,6 +58,8 @@ async def _esearch(
         await asyncio.sleep(1.0 / requests_per_second)
     if "ERROR" in result:
         raise ValueError(f"PubMed eSearch error: {result['ERROR']}")
+    if "querytranslation" in result:
+        _log.debug("eSearch querytranslation: %s", result["querytranslation"])
     return result
 
 

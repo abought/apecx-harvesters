@@ -32,8 +32,13 @@ from apecx_harvesters.loaders.pubmed.search import search as pubmed_search
 from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 
 
-async def _run(term: str, begin_year: int, end_year: int) -> None:
-    pubmed_term = f"{term} AND {begin_year}:{end_year}[pdat]"
+async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
+    if begin_year is not None or end_year is not None:
+        start = begin_year or 1800
+        end = end_year or date.today().year
+        pubmed_term = f"{term} AND {start}:{end}[pdat]"
+    else:
+        pubmed_term = term
     pdb_query = SearchQuery.full_text(term)
 
     async with httpx.AsyncClient() as client:
@@ -54,7 +59,6 @@ async def _run(term: str, begin_year: int, end_year: int) -> None:
         )
 
 def main() -> None:
-    current_year = date.today().year
     parser = argparse.ArgumentParser(
         description=(
             "Search PubMed and PDB by biological entity or keyword "
@@ -69,21 +73,21 @@ def main() -> None:
     parser.add_argument(
         "--begin-year",
         type=int,
-        default=current_year - 10,
+        default=None,
         metavar="YEAR",
-        help="Earliest publication year for PubMed results (default: %(default)s).",
+        help="Earliest publication year for PubMed results. Omit to search all years.",
     )
     parser.add_argument(
         "--end-year",
         type=int,
-        default=current_year,
+        default=None,
         metavar="YEAR",
-        help="Latest publication year for PubMed results (default: %(default)s).",
+        help="Latest publication year for PubMed results. Omit to search all years.",
     )
     args = parser.parse_args()
 
     begin, end = args.begin_year, args.end_year
-    if begin > end:
+    if begin is not None and end is not None and begin > end:
         begin, end = end, begin
 
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
