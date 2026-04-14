@@ -12,9 +12,65 @@ from apecx_harvesters.loaders.base.parser import (
     compose_creator_name,
     deduplicate_subjects,
     orcid_name_identifier,
+    parse_author_name,
     split_page,
 )
 from apecx_harvesters.loaders.base import RelatedIdentifierType, RelatedItemType, RelationType
+
+
+# ---------------------------------------------------------------------------
+# parse_author_name
+# ---------------------------------------------------------------------------
+
+class TestParseAuthorName:
+    # "Firstname Lastname" — western order, space-separated
+    def test_firstname_lastname(self):
+        assert parse_author_name("Jane Smith") == ("Smith", "Jane")
+
+    def test_firstname_lastname_strips_whitespace(self):
+        assert parse_author_name("  Jane Smith  ") == ("Smith", "Jane")
+
+    # "Lastname, Firstname" — comma-separated
+    def test_comma_form_full_given(self):
+        assert parse_author_name("Smith, Jane") == ("Smith", "Jane")
+
+    def test_comma_form_initial_with_period(self):
+        assert parse_author_name("Smith, J.") == ("Smith", "J")
+
+    def test_comma_form_initial_without_period(self):
+        assert parse_author_name("Smith, J") == ("Smith", "J")
+
+    def test_comma_form_no_given(self):
+        # Trailing comma with nothing after — treat as family-only
+        assert parse_author_name("Smith,") == ("Smith", None)
+
+    def test_comma_form_given_with_spaces(self):
+        # Full given name with spaces in the rest portion
+        assert parse_author_name("Smith, Jane Marie") == ("Smith", "Jane Marie")
+
+    # "I. Lastname" — initial-first order
+    def test_initial_dot_lastname(self):
+        assert parse_author_name("J. Smith") == ("Smith", "J")
+
+    def test_initial_no_dot_lastname(self):
+        assert parse_author_name("J Smith") == ("Smith", "J")
+
+    # Family-only
+    def test_family_only(self):
+        assert parse_author_name("Smith") == ("Smith", None)
+
+    # Middle names — only first token taken as given in space-separated form
+    def test_middle_name_ignored(self):
+        family, given = parse_author_name("Jane Marie Smith")
+        assert family == "Smith"
+        assert given == "Jane"
+
+    # Hyphenated names
+    def test_hyphenated_family(self):
+        assert parse_author_name("Mary Smith-Jones") == ("Smith-Jones", "Mary")
+
+    def test_hyphenated_given(self):
+        assert parse_author_name("Smith, Mary-Anne") == ("Smith", "Mary-Anne")
 
 
 # ---------------------------------------------------------------------------

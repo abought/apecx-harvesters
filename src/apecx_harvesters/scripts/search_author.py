@@ -23,18 +23,13 @@ from apecx_harvesters.loaders.pdb.search import SearchQuery
 from apecx_harvesters.loaders.pdb.search import search as pdb_search
 from apecx_harvesters.loaders.pubmed import PubMedHarvester
 from apecx_harvesters.loaders.pubmed.constants import rate_limit as _PUBMED_RATE_LIMIT
-from apecx_harvesters.loaders.pubmed.search import search as pubmed_search
+from apecx_harvesters.loaders.pubmed.search import pubmed_author_term, search as pubmed_search
 from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 
 
-async def _run(author: str) -> None:
-    family_name = author.split()[0] if " " in author else author
-    pdb_query = SearchQuery(
-        value=family_name,
-        attribute="audit_author.name",
-        operator="contains_words",
-    )
-    term = f'"{author}"[Author]'
+async def _run(author: str | None, orcid: str | None, institution: str | None) -> None:
+    pdb_query = SearchQuery.by_author(author, orcid=orcid, institution=institution)
+    term = pubmed_author_term(author, orcid=orcid)
 
     async with httpx.AsyncClient() as client:
         pubmed = PubMedHarvester(client=client, requests_per_second=_PUBMED_RATE_LIMIT / 2)
@@ -59,14 +54,35 @@ def main() -> None:
     )
     parser.add_argument(
         "--author",
-        required=True,
-        help="Author name to search for.",
+        default=None,
+        help="Author name. Accepted formats: 'Jane Smith', 'Smith, Jane', 'J. Smith'.",
+    )
+    parser.add_argument(
+        "--orcid",
+        default=None,
+        metavar="ORCID",
+        help=(
+            "Author ORCID (e.g. 0000-0002-1234-5678). OR'd with name variants so that "
+            "records predating ORCID adoption are still retrieved via name matching."
+        ),
+    )
+    parser.add_argument(
+        "--institution",
+        default=None,
+        metavar="NAME",
+        help=(
+            "Institution name to narrow results (e.g. 'University of Michigan'). "
+            "Matched against PubMed affiliation data; entries without a linked "
+            "PubMed record may be excluded."
+        ),
     )
     args = parser.parse_args()
+    if args.author is None and args.orcid is None:
+        parser.error("At least one of --author or --orcid is required.")
 
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
     logging.getLogger("apecx_harvesters").setLevel(logging.INFO)
-    asyncio.run(_run(args.author))
+    asyncio.run(_run(args.author, args.orcid, args.institution))
 
 
 if __name__ == "__main__":

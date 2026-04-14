@@ -11,7 +11,52 @@ from datetime import date, timedelta
 import httpx
 import orjson
 
+from ..base.parser import parse_author_name as _parse_author_name
 from .constants import rate_limit as _default_rate_limit
+
+def pubmed_author_term(name: str | None = None, orcid: str | None = None) -> str:
+    """
+    Build a PubMed eSearch author query string.  At least one of *name* or
+    *orcid* must be supplied.
+
+    PubMed indexes author names as ``"LastName FirstName"`` or ``"LastName F"``
+    (last name first, no comma, space-separated).  Both the full-name and
+    initial forms are OR'd together to cover older records that lack full given
+    names.  When only *orcid* is supplied, the query matches exclusively on the
+    ``[auid]`` field.  When both are supplied, ORCID and name variants are OR'd.
+
+    Examples::
+
+        pubmed_author_term("Andrzej Joachimiak")
+        # → ("Joachimiak Andrzej"[Author] OR "Joachimiak A"[Author])
+
+        pubmed_author_term(orcid="0000-0002-1234-5678")
+        # → ("0000-0002-1234-5678"[auid])
+
+        pubmed_author_term("Jane Smith", orcid="0000-0002-1234-5678")
+        # → ("Smith Jane"[Author] OR "Smith J"[Author] OR "0000-0002-1234-5678"[auid])
+    """
+    if name is None and orcid is None:
+        raise ValueError("At least one of 'name' or 'orcid' must be provided.")
+
+    clauses: list[str] = []
+
+    if name is not None:
+        family, given = _parse_author_name(name)
+        if given:
+            initial = given[0]
+            if len(given) > 1:
+                clauses.append(f'"{family} {given}"[Author]')
+            clauses.append(f'"{family} {initial}"[Author]')
+        else:
+            clauses.append(f'"{family}"[Author]')
+
+    if orcid is not None:
+        orcid_clean = orcid.removeprefix("https://orcid.org/").strip()
+        clauses.append(f'"{orcid_clean}"[auid]')
+
+    return f"({' OR '.join(clauses)})"
+
 
 # Observed: PubMed eSearch responses can contain bare control characters (including \t, \n, \r)
 # inside JSON string values, which strict parsers reject.  Strip all ASCII control characters;

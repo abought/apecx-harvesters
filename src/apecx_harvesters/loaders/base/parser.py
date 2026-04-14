@@ -16,6 +16,31 @@ from .model import (
 )
 
 
+def parse_author_name(name: str) -> tuple[str, str | None]:
+    """Parse a human name string into ``(family, given)`` components.
+
+    Accepts any of these formats::
+
+        "Jane Smith"   → ("Smith", "Jane")
+        "Smith, Jane"  → ("Smith", "Jane")
+        "J. Smith"     → ("Smith", "J")
+        "Smith"        → ("Smith", None)
+    """
+    name = name.strip()
+    if "," in name:
+        family, _, rest = name.partition(",")
+        given = rest.strip().rstrip(".")
+        return family.strip(), given or None
+
+    parts = name.split()
+    if len(parts) == 1:
+        return parts[0], None
+
+    family = parts[-1]
+    given = parts[0].rstrip(".")
+    return family, given or None
+
+
 def orcid_name_identifier(raw: str) -> NameIdentifier:
     """Build a NameIdentifier for an ORCID value.
 
