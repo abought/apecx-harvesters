@@ -33,6 +33,7 @@ def _parse(data: dict) -> EMDBContainer:
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
 FIXTURE = FIXTURE_DIR / "emdb_EMD-74041.json"
+BATCH_FIXTURE = FIXTURE_DIR / "emdb_batch_EMD-1000_EMD-74041.json"
 
 
 # ---------------------------------------------------------------------------
@@ -233,6 +234,46 @@ class TestSchemaValidation:
             schema=EMDBContainer.json_schema(),
         )
 
+
+
+# ---------------------------------------------------------------------------
+# Batch retrieval — _split_batch
+# ---------------------------------------------------------------------------
+
+class TestSplitBatch:
+    @pytest.fixture(scope="class")
+    def batch_raw(self) -> str:
+        return BATCH_FIXTURE.read_text()
+
+    @pytest.fixture(scope="class")
+    def split(self, batch_raw) -> dict:
+        return asyncio.run(EMDBHarvester()._split_batch(batch_raw, []))
+
+    def test_both_ids_present(self, split):
+        assert set(split.keys()) == {"EMD-1000", "EMD-74041"}
+
+    def test_each_value_is_json_string(self, split):
+        for raw in split.values():
+            parsed = json.loads(raw)
+            assert isinstance(parsed, dict)
+
+    def test_id_matches_content(self, split):
+        for emdb_id, raw in split.items():
+            assert json.loads(raw)["emdb_id"] == emdb_id
+
+    def test_entries_parse_successfully(self, split):
+        """Confirm the parser accepts the data format returned by the search endpoint."""
+        for raw in split.values():
+            record = asyncio.run(EMDBHarvester()._parse_item(raw))
+            assert isinstance(record, EMDBContainer)
+
+    def test_emdb_74041_id_field(self, split):
+        record: EMDBContainer = asyncio.run(EMDBHarvester()._parse_item(split["EMD-74041"]))
+        assert record.emdb.emdb_id == "EMD-74041"
+
+    def test_emdb_1000_id_field(self, split):
+        record: EMDBContainer = asyncio.run(EMDBHarvester()._parse_item(split["EMD-1000"]))
+        assert record.emdb.emdb_id == "EMD-1000"
 
 
 # ---------------------------------------------------------------------------

@@ -73,14 +73,18 @@ Article and knowledge repository with good coverage of older literature and US g
 ### EMDB
 The Electron Microscopy database provides structure data from electron microscopy.
 * API docs: https://www.ebi.ac.uk/emdb/api/
-* Single entry endpoint: `https://www.ebi.ac.uk/emdb/api/entry/{id}` (e.g. `EMD-74041`)
-* EMD-74041 example: https://www.ebi.ac.uk/emdb/api/entry/EMD-74041
+* Search fields documentation: https://www.ebi.ac.uk/emdb/documentation/search/fields
 
-Batch ID discovery uses the EBI Search infrastructure (not the EMDB native search endpoint, which returns full records and has unclear pagination):
-* Endpoint: `GET https://www.ebi.ac.uk/ebisearch/ws/rest/emdb`
-* Params: `query` (query string), `fields=id` (return IDs only), `size` (page size), `start` (offset)
-* Response: `{"hitCount": N, "entries": [{"id": "EMD-NNNNN"}, ...]}`
-* EBI Search docs: https://www.ebi.ac.uk/ebisearch/documentation/rest-api
+* Single-entry example (EMD-74041): https://www.ebi.ac.uk/emdb/api/entry/EMD-74041
+
+Search and batch retrieval use the native EMDB search endpoint. Since the LLM had trouble reading this page, some notes are below to guide usage:
+* Endpoint: `GET https://www.ebi.ac.uk/emdb/api/search/{lucene_query}`
+  * The Lucene query is embedded in the URL path and must be URL-encoded (e.g. `emdb_id%3A%22EMD-54060%22`)
+  * Pagination: `?rows=N&page=P`; exhausted page returns empty array `[]`
+  * ID-only search: add `?fl=emdb_id` with `Accept: text/csv` — field restriction only works for CSV responses
+  * Full-record retrieval: omit `fl`, use `Accept: application/json`
+    * Batch ID lookup: `emdb_id:"EMD-A" OR emdb_id:"EMD-B" OR ...` — keep batch sizes small to avoid long URLs
+
 
 # Ignore these; may be used later
 ## Protein and design databases

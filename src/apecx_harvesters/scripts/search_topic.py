@@ -3,9 +3,6 @@ Search for publications and structures by biological entity or keyword and popul
 
 Run aggregate_gsearch.py after this script to produce Globus Search ingest chunks.
 
-- PubMed: free-text term with optional publication-date range (defaults to the last 10 years).
-- PDB: full-text search across all PDB fields.
-
 Usage
 -----
     uv run search-topic --term "SARS-CoV-2"
@@ -22,6 +19,9 @@ from datetime import date
 import httpx
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
+from apecx_harvesters.loaders.emdb import EMDBHarvester
+from apecx_harvesters.loaders.emdb.constants import rate_limit as _EMDB_RATE_LIMIT
+from apecx_harvesters.loaders.emdb.search import search as emdb_search
 from apecx_harvesters.loaders.pdb import PDBHarvester
 from apecx_harvesters.loaders.pdb.constants import rate_limit as _PDB_RATE_LIMIT
 from apecx_harvesters.loaders.pdb.search import SearchQuery
@@ -44,6 +44,7 @@ async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
     async with httpx.AsyncClient() as client:
         pubmed = PubMedHarvester(client=client, requests_per_second=_PUBMED_RATE_LIMIT / 2)
         pdb = PDBHarvester(client=client, requests_per_second=_PDB_RATE_LIMIT / 2)
+        emdb = EMDBHarvester(client=client, requests_per_second=_EMDB_RATE_LIMIT / 2)
 
         await run_parallel(
             PipelineSpec(
@@ -56,12 +57,17 @@ async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
                 sink=report("pdb"),
                 name="pdb",
             ),
+            PipelineSpec(
+                source=emdb.iter_results(emdb_search(term, client=client, requests_per_second=_EMDB_RATE_LIMIT / 2)),
+                sink=report("emdb"),
+                name="emdb",
+            ),
         )
 
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Search PubMed and PDB by biological entity or keyword "
+            "Search PubMed, PDB, and EMDB by biological entity or keyword "
             "and populate the local cache."
         )
     )
