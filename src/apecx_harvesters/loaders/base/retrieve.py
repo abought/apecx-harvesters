@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import gzip
 import logging
 import re
@@ -13,6 +12,7 @@ from typing import Any, ClassVar, Generic, TypeVar
 
 import httpx
 
+from .http_retry import http_request
 from .model import DataCite
 from .rate_limit import RateLimiter
 
@@ -115,18 +115,15 @@ class BaseHarvester(ABC, Generic[T]):
     async def _fetch(self, url: str, body: str | None, headers: dict | None) -> str:
         """Run the actual request. GET when body is None, POST otherwise."""
         assert self._client is not None
-        if self._rate_limiter is not None:
-            await self._rate_limiter.acquire()
-        kwargs: dict[str, Any] = {"headers": headers} if headers else {}
-        if body is None:
-            response = await self._client.get(url, **kwargs)
-        else:
-            response = await self._client.post(url, content=body, **kwargs)
-        if response.is_error:
-            logger.warning(
-                "HTTP %d for %s — response headers: %s",
-                response.status_code, url, dict(response.headers),
-            )
+        method = "GET" if body is None else "POST"
+        kwargs: dict[str, Any] = {}
+        if headers:
+            kwargs["headers"] = headers
+        if body is not None:
+            kwargs["content"] = body
+        response = await http_request(
+            self._client, method, url, rate_limiter=self._rate_limiter, **kwargs
+        )
         response.raise_for_status()
         return response.text
 

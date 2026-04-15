@@ -9,6 +9,7 @@ from typing import Any
 import httpx
 import orjson
 
+from ..base.http_retry import http_request as _http_request
 from ..base.parser import parse_author_name as _parse_author_name
 from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
@@ -233,9 +234,11 @@ async def search(
                     "paginate": {"start": start, "rows": page_size},
                 },
             }
-            await limiter.acquire()
-            response = await client.post(
+            response = await _http_request(
+                client,
+                "POST",
                 _SEARCH_URL,
+                rate_limiter=limiter,
                 content=orjson.dumps(payload),
                 headers={"Content-Type": "application/json"},
             )

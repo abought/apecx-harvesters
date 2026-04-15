@@ -23,6 +23,15 @@ class RateLimiter:
         self._last: float = time.monotonic()
         self._lock = asyncio.Lock()
 
+    @property
+    def rate(self) -> float:
+        """Current request rate (requests per second)."""
+        return self._rate
+
+    def set_rate(self, rate: float) -> None:
+        _log.debug("[%s] rate adjusted: %.3f → %.3f req/s", self._name, self._rate, rate)
+        self._rate = rate
+
     async def acquire(self) -> None:
         """Block until a request token is available, then consume one."""
         async with self._lock:

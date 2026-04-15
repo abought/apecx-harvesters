@@ -10,6 +10,7 @@ from datetime import date, timedelta
 import httpx
 import orjson
 
+from ..base.http_retry import http_request as _http_request
 from ..base.parser import parse_author_name as _parse_author_name
 from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
@@ -86,10 +87,11 @@ async def _esearch(
     rate_limiter: RateLimiter | None,
 ) -> dict:
     """Make a single eSearch request and return the ``esearchresult`` dict."""
-    if rate_limiter is not None:
-        await rate_limiter.acquire()
-    response = await client.get(
+    response = await _http_request(
+        client,
+        "GET",
         _ESEARCH_URL,
+        rate_limiter=rate_limiter,
         params={
             "db": "pubmed",
             "term": term,
@@ -98,11 +100,6 @@ async def _esearch(
             "retmax": retmax,
         },
     )
-    if response.is_error:
-        _log.warning(
-            "HTTP %d for eSearch — response headers: %s",
-            response.status_code, dict(response.headers),
-        )
     response.raise_for_status()
     clean = _CONTROL_CHARS_RE.sub(b"", response.content)
     result = orjson.loads(clean)["esearchresult"]

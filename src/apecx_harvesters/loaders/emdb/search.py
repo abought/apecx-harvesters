@@ -7,6 +7,7 @@ from collections.abc import AsyncIterator
 
 import httpx
 
+from ..base.http_retry import http_request as _http_request
 from ..base.parser import parse_author_name as _parse_author_name
 from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
@@ -81,9 +82,11 @@ async def search(
         url = f"{_SEARCH_BASE}/{urllib.parse.quote(term)}"
         page = 1
         while True:
-            await limiter.acquire()
-            response = await client.get(
+            response = await _http_request(
+                client,
+                "GET",
                 url,
+                rate_limiter=limiter,
                 params={"rows": page_size, "page": page, "fl": "emdb_id"},
                 headers={"Accept": "text/csv"},
             )
