@@ -16,7 +16,7 @@ _EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 _BATCH_SIZE = 500
 
 
-class PubMedHarvester(BaseHarvester):
+class PubMedHarvester(BaseHarvester[PubMedContainer]):
     _BATCH_SIZE: ClassVar[int] = _BATCH_SIZE
     _CACHE_DIR = "pubmed"
     _DEFAULT_REQUESTS_PER_SECOND: ClassVar[float | None] = rate_limit

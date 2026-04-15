@@ -26,14 +26,14 @@ class ReportResult:
     n_errors: int
 
 
-def report(name: str = "") -> Callable[[AsyncIterator[RetrievalResult]], Awaitable[ReportResult]]:
+def report(name: str = "") -> Callable[[AsyncIterator[RetrievalResult[Any]]], Awaitable[ReportResult]]:
     """
     Retrieve all results and report how many records were found.
 
     In conjunction with a search + retrieval step, this has the effect of fetching all results into a local cache,
         for subsequent aggregation or re-processing.
     """
-    async def _sink(results: AsyncIterator[RetrievalResult]) -> ReportResult:
+    async def _sink(results: AsyncIterator[RetrievalResult[Any]]) -> ReportResult:
         fetched = errors = 0
         async for result in results:
             if result.ok:
@@ -61,7 +61,7 @@ def _to_gmetaentry(
 
 
 async def to_gmetalist(
-    results: AsyncIterator[RetrievalResult],
+    results: AsyncIterator[RetrievalResult[Any]],
     *,
     visible_to: list[str] | None = None,
     max_bytes: int = _GSEARCH_MAX_BYTES,

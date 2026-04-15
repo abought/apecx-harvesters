@@ -13,7 +13,7 @@ from .parser import _BATCH_SELECT, _parse_work, _strip_doi
 _API_BASE = "https://api.openalex.org/works"
 
 
-class OpenAlexHarvester(BaseHarvester):
+class OpenAlexHarvester(BaseHarvester[DataCite]):
     """
     Retrieve information about a DOI from the generalist OpenAlex service.
 

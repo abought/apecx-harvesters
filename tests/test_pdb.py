@@ -224,8 +224,7 @@ class TestPDBFields:
     def test_struct_keywords_none_when_absent(self, raw_1omw):
         data = {k: v for k, v in raw_1omw.items() if k != "struct_keywords"}
         record = _parse(data)
-        assert record.pdb.struct_keywords is None
-
+        assert record.pdb.struct_keywords is None  # type: ignore[attr-defined]
     def test_polymer_entities_count(self, record_1omw):
         assert len(record_1omw.pdb.polymer_entities) == 3
 
@@ -244,8 +243,7 @@ class TestPDBFields:
 
     def test_polymer_entities_empty_when_absent(self, raw_1omw):
         data = {k: v for k, v in raw_1omw.items() if k != "polymer_entities"}
-        assert _parse(data).pdb.polymer_entities == []
-
+        assert _parse(data).pdb.polymer_entities == []  # type: ignore[attr-defined]
 
 class TestPolymerEntitiesMultiOrganism:
     """6M0J: SARS-CoV-2 spike RBD bound to human ACE2 — two distinct source organisms."""
@@ -351,12 +349,11 @@ class TestInvalidPayloads:
         with pytest.raises(KeyError):
             _parse(data)
 
-    def test_empty_exptl_list_yields_unknown_method(self, raw_1omw):
-        """exptl present but empty → falls back to UNKNOWN method gracefully."""
+    def test_empty_exptl_list_yields_none_method(self, raw_1omw):
+        """exptl present but empty → method is None."""
         data = {**raw_1omw, "exptl": []}
         record = _parse(data)
-        assert record.pdb.method == "UNKNOWN"
-
+        assert record.pdb.method is None  # type: ignore[attr-defined]
     def test_integer_rcsb_id_raises_at_construction(self, raw_1omw):
         """With strict=True, passing an integer where rcsb_id expects a string
         raises ValidationError at object construction time (caught by PDBFields or AlternateIdentifier)."""

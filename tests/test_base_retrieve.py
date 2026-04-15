@@ -47,7 +47,7 @@ class _SequentialStub(BaseHarvester):
         self,
         responses: dict[str, DataCite],
         *,
-        fail_ids: set[str] = frozenset(),
+        fail_ids: frozenset[str] | set[str] = frozenset(),
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
@@ -161,15 +161,15 @@ class TestSequentialIterResults:
         harvester = _SequentialStub(recs, use_cache=False, cache_root=tmp_path)
         results = _collect(harvester, ["A", "B"])
         assert all(r.ok for r in results)
-        assert results[0].record.titles[0].title == "Alpha"
-        assert results[1].record.titles[0].title == "Beta"
+        assert results[0].record is not None and results[0].record.titles[0].title == "Alpha"
+        assert results[1].record is not None and results[1].record.titles[0].title == "Beta"
 
     def test_per_item_failure_reported_as_error(self, tmp_path):
         recs = {"A": _record("Alpha"), "B": _record("Beta")}
         harvester = _SequentialStub(recs, fail_ids={"A"}, use_cache=False, cache_root=tmp_path)
         results = _collect(harvester, ["A", "B"])
         assert results[0].ok is False
-        assert "simulated failure" in results[0].error
+        assert results[0].error is not None and "simulated failure" in results[0].error
         assert results[1].ok is True
 
     def test_failure_does_not_abort_remaining_items(self, tmp_path):
@@ -249,7 +249,7 @@ class TestBatchIterResults:
         harvester = _BatchStub({}, fail_chunks=True, use_cache=False, cache_root=tmp_path)
         results = _collect(harvester, ["A", "B", "C"])
         assert all(not r.ok for r in results)
-        assert all("simulated chunk failure" in r.error for r in results)
+        assert all(r.error is not None and "simulated chunk failure" in r.error for r in results)
 
     def test_results_in_input_order(self, tmp_path):
         recs = {str(i): _record(str(i)) for i in range(5)}
@@ -304,7 +304,7 @@ class TestBatchIterResults:
         results = _collect(harvester, ["A", "B", "C", "D"])
 
         a, b, c, d = results
-        assert a.ok is False and "first chunk fails" in a.error
-        assert b.ok is False and "first chunk fails" in b.error
+        assert a.ok is False and a.error is not None and "first chunk fails" in a.error
+        assert b.ok is False and b.error is not None and "first chunk fails" in b.error
         assert c.ok is True
         assert d.ok is True

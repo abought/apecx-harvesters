@@ -57,10 +57,10 @@ class PDBFields(BaseModel):
         title="PDB ID",
         description="RCSB PDB accession code, e.g. '1OMW'",
     )]
-    method: Annotated[str, Field(
+    method: Annotated[Optional[str], Field(
         title="Experimental Method",
         description="Experimental technique used to determine the structure, e.g. 'X-RAY DIFFRACTION'",
-    )]
+    )] = None
     resolution_angstrom: Annotated[Optional[float], Field(
         title="Resolution (Å)",
         description="Diffraction resolution in ångströms; absent for NMR and other non-diffraction methods",

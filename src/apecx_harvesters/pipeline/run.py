@@ -7,33 +7,32 @@ import dataclasses
 import logging
 from collections.abc import AsyncIterator, Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 from apecx_harvesters.loaders.base import DataCite
 from apecx_harvesters.loaders.base.retrieve import RetrievalResult
 
 logger = logging.getLogger(__name__)
 
-# Process the stream of returned results in some useful way
-Sink = Callable[[AsyncIterator[RetrievalResult]], Awaitable[Any]]
+T = TypeVar("T", bound=DataCite)
 
-# A transform operates on a single record. Steps that block due to sync calls should use `asyncio.to_thread`
-Transform = Callable[[DataCite], Awaitable[DataCite]]
+# Process the stream of returned results in some useful way.
+Sink = Callable[[AsyncIterator[RetrievalResult[Any]]], Awaitable[Any]]
 
 
 @dataclass
-class PipelineSpec:
+class PipelineSpec(Generic[T]):
     """Arguments for a single run() call, for use with run_parallel()."""
-    source: AsyncIterator[RetrievalResult]
+    source: AsyncIterator[RetrievalResult[T]]
     sink: Sink
-    transforms: list[Transform] = field(default_factory=list)
+    transforms: list[Callable[[T], Awaitable[T]]] = field(default_factory=list)
     name: str = ""
 
 
 async def run(
-    source: AsyncIterator[RetrievalResult],
+    source: AsyncIterator[RetrievalResult[T]],
     sink: Sink,
-    transforms: list[Transform] | None = None,
+    transforms: list[Callable[[T], Awaitable[T]]] | None = None,
 ) -> Any:
     """
     Implement a pipeline for scraping+harmonization:
@@ -44,11 +43,11 @@ async def run(
     """
     _transforms = transforms or []
 
-    async def _pipe() -> AsyncIterator[RetrievalResult]:
+    async def _pipe() -> AsyncIterator[RetrievalResult[T]]:
         async for result in source:
             if result.ok and _transforms:
                 assert result.record is not None
-                record: DataCite = result.record
+                record: T = result.record
                 try:
                     for t in _transforms:
                         record = await t(record)
@@ -65,7 +64,7 @@ async def run(
     return await sink(_pipe())
 
 
-async def run_parallel(*specs: PipelineSpec) -> list[Any]:
+async def run_parallel(*specs: PipelineSpec[Any]) -> list[Any]:
     """Run multiple pipelines concurrently and return their results in order."""
     return list(
         await asyncio.gather(*[

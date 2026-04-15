@@ -149,9 +149,10 @@ def _parse_pdb_fields(data: dict[str, Any]) -> PDBFields:
         pdbx_keywords=raw_kw.get("pdbx_keywords") if raw_kw else None,
         text=raw_kw.get("text") if raw_kw else None,
     ) if raw_kw else None
+    exptl = data.get("exptl") or []
     return PDBFields(
         pdb_id=data["rcsb_id"],
-        method=(data.get("exptl") or [{}])[0].get("method", "UNKNOWN"),
+        method=exptl[0].get("method") if exptl else None,
         resolution_angstrom=resolution_list[0] if resolution_list else None,
         polymer_entities=_parse_polymer_entities(data),
         struct_keywords=struct_kw,

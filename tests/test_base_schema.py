@@ -302,7 +302,7 @@ class TestDoiShorthand:
             publisher=Publisher(name="pub"),
             identifier=ident,
         )
-        assert record.identifier.identifier == "10.9999/other"
+        assert record.identifier is not None and record.identifier.identifier == "10.9999/other"
 
     def test_doi_none_is_ignored(self):
         record = DataCite.new(
@@ -351,19 +351,19 @@ class TestTypeEnforcement:
 
     def test_wrong_type_for_date_string_raises(self):
         with pytest.raises(ValidationError):
-            Date(date=20240101, dateType=DateType.Created)
+            Date(date=20240101, dateType=DateType.Created)  # pyright: ignore[reportArgumentType]
 
     def test_invalid_date_type_string_raises(self):
         with pytest.raises(ValidationError):
-            Date(date="2024-01-01T00:00:00Z", dateType="NotAValidType")
+            Date(date="2024-01-01T00:00:00Z", dateType="NotAValidType")  # pyright: ignore[reportArgumentType]
 
     def test_wrong_type_for_publisher_name_raises(self):
         with pytest.raises(ValidationError):
-            Publisher(name=["not", "a", "string"])
+            Publisher(name=["not", "a", "string"])  # pyright: ignore[reportArgumentType]
 
     def test_invalid_description_type_raises(self):
         with pytest.raises(ValidationError):
-            Description(description="text", descriptionType="NotAValidType")
+            Description(description="text", descriptionType="NotAValidType")  # pyright: ignore[reportArgumentType]
 
 
 # ---------------------------------------------------------------------------
@@ -426,7 +426,7 @@ class TestNameIdentifier:
 
     def test_name_identifier_missing_scheme_raises(self):
         with pytest.raises(ValidationError):
-            NameIdentifier(nameIdentifier="0000-0002-9072-1017")
+            NameIdentifier(nameIdentifier="0000-0002-9072-1017")  # pyright: ignore[reportCallIssue]
 
     def test_roundtrip_validates_against_schema(self):
         record = DataCite.new(

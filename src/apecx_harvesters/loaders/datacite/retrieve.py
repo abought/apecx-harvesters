@@ -13,7 +13,7 @@ from .parser import _parse_work
 _API_BASE = "https://api.datacite.org/dois"
 
 
-class DataCiteHarvester(BaseHarvester):
+class DataCiteHarvester(BaseHarvester[DataCite]):
     """Fetch data for a datacite DOI. Includes many dataset publishers"""
     _CACHE_DIR = "datacite"
     _BATCH_SIZE = 1

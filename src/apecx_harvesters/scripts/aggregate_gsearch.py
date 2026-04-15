@@ -28,6 +28,7 @@ import gzip
 import json
 import logging
 from pathlib import Path
+from typing import Any
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
 from apecx_harvesters.loaders.base import BaseHarvester
@@ -55,7 +56,7 @@ def _last_aggregation(output_root: Path) -> datetime.datetime | None:
 
 
 async def _aggregate(
-    harvester: BaseHarvester,
+    harvester: BaseHarvester[Any],
     output_dir: Path,
     source: str,
     since: datetime.datetime | None,
@@ -76,7 +77,7 @@ async def _run(output_root: Path, cache_root: Path) -> None:
     since = _last_aggregation(output_root)
     run_dir = output_root / datetime.datetime.now().strftime(_TIMESTAMP_FMT)
 
-    harvesters: list[tuple[BaseHarvester, str]] = [
+    harvesters: list[tuple[BaseHarvester[Any], str]] = [
         (PubMedHarvester(cache_root=cache_root), "pubmed"),
         (PDBHarvester(cache_root=cache_root), "pdb"),
     ]

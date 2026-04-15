@@ -268,13 +268,14 @@ class TestSplitBatch:
             assert isinstance(record, EMDBContainer)
 
     def test_emdb_74041_id_field(self, split):
-        record: EMDBContainer = asyncio.run(EMDBHarvester()._parse_item(split["EMD-74041"]))
-        assert record.emdb.emdb_id == "EMD-74041"
+        record = asyncio.run(EMDBHarvester()._parse_item(split["EMD-74041"]))
+        assert isinstance(record, EMDBContainer)
+        assert record.emdb.emdb_id == "EMD-74041"  # type: ignore[attr-defined]
 
     def test_emdb_1000_id_field(self, split):
-        record: EMDBContainer = asyncio.run(EMDBHarvester()._parse_item(split["EMD-1000"]))
-        assert record.emdb.emdb_id == "EMD-1000"
-
+        record = asyncio.run(EMDBHarvester()._parse_item(split["EMD-1000"]))
+        assert isinstance(record, EMDBContainer)
+        assert record.emdb.emdb_id == "EMD-1000"  # type: ignore[attr-defined]
 
 # ---------------------------------------------------------------------------
 # Edge cases

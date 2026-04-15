@@ -51,7 +51,7 @@ query($ids: [String!]!) {
 """
 
 
-class PDBHarvester(BaseHarvester):
+class PDBHarvester(BaseHarvester[PDBContainer]):
     _BATCH_SIZE: ClassVar[int] = _GRAPHQL_BATCH_SIZE
     _CACHE_DIR = "pdb"
     _DEFAULT_REQUESTS_PER_SECOND: ClassVar[float | None] = rate_limit

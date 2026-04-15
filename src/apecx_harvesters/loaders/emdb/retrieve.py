@@ -18,7 +18,7 @@ _SEARCH_BASE = "https://www.ebi.ac.uk/emdb/api/search"
 _BATCH_SIZE = 25
 
 
-class EMDBHarvester(BaseHarvester):
+class EMDBHarvester(BaseHarvester[EMDBContainer]):
     """Fetch structural data from the EMDB."""
     _CACHE_DIR = "emdb"
     _BATCH_SIZE = _BATCH_SIZE

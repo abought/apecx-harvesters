@@ -14,7 +14,7 @@ from .parser import _parse_work
 _BASE_URL = "https://api.crossref.org/works"
 
 
-class CrossrefHarvester(BaseHarvester):
+class CrossrefHarvester(BaseHarvester[DataCite]):
     """Fetch records for a CrossRef DOI (most articles and preprints)"""
     # Crossref /works?filter= accepts comma-separated doi: clauses; rows=1000
     # comfortably covers any chunk ≤ _BATCH_SIZE in one page.

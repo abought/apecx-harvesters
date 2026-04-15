@@ -22,7 +22,7 @@ _RA_API = "https://doi.org/ra"
 _RA_BATCH_SIZE = 100
 
 
-def _resolve(ra: str) -> type[BaseHarvester]:
+def _resolve(ra: str) -> type[BaseHarvester[DataCite]]:
     """Return the harvester class for *ra*; falls back to OpenAlex for unknown agencies."""
     if ra == "Crossref":
         return crossref.CrossrefHarvester
@@ -32,7 +32,7 @@ def _resolve(ra: str) -> type[BaseHarvester]:
         return openalex.OpenAlexHarvester
 
 
-class DOIHarvester(BaseHarvester):
+class DOIHarvester(BaseHarvester[DataCite]):
     """
     Fetch an item by DOI. An internal quirk is that there are multiple independent DOI registries.
 
@@ -53,7 +53,7 @@ class DOIHarvester(BaseHarvester):
         # iter_results is fully handled by the base class; parsing is delegated to specialist harvesters.
         raise NotImplementedError
 
-    async def _iter_chunk(self, chunk: list[str]) -> AsyncIterator[RetrievalResult]:
+    async def _iter_chunk(self, chunk: list[str]) -> AsyncIterator[RetrievalResult[DataCite]]:
         """Resolve RAs for *chunk*, then delegate per-RA to specialist ``iter_results``."""
         ra_map: dict[str, str] = {}
         unknown: list[str] = []

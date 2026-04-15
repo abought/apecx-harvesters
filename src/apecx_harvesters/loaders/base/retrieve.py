@@ -8,7 +8,7 @@ from collections.abc import AsyncIterable, AsyncIterator, Iterable
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import ClassVar
+from typing import Any, ClassVar, Generic, TypeVar
 
 import httpx
 
@@ -16,12 +16,14 @@ from .model import DataCite
 
 _DEFAULT_CACHE_ROOT = Path(".cache")
 
+T = TypeVar("T", bound=DataCite)
+
 
 @dataclass
-class RetrievalResult:
+class RetrievalResult(Generic[T]):
     """Outcome of a single record retrieval attempt."""
     id: str
-    record: DataCite | None = None
+    record: T | None = None
     error: str | None = None
 
     @property
@@ -29,7 +31,7 @@ class RetrievalResult:
         return self.record is not None
 
 
-class BaseHarvester(ABC):
+class BaseHarvester(ABC, Generic[T]):
     """
     Retrieve record(s) from an API by ID, then parse them into a structured format
 
@@ -70,7 +72,7 @@ class BaseHarvester(ABC):
         return self._cache_root / self._CACHE_DIR / f"{safe}.json.gz"
 
     @abstractmethod
-    async def _parse_item(self, content: str) -> DataCite:
+    async def _parse_item(self, content: str) -> T:
         """Parse a single raw item string into a DataCite record.
 
         For harvesters with ``_BATCH_SIZE == 1``: *content* is the full
@@ -97,7 +99,7 @@ class BaseHarvester(ABC):
         """
         raise NotImplementedError
 
-    async def _parse_many(self, content: str) -> dict[str, DataCite]:
+    async def _parse_many(self, content: str) -> dict[str, T]:
         """
         Parse a batch response into a ``{normalized_id: record}`` mapping.
         """
@@ -107,7 +109,7 @@ class BaseHarvester(ABC):
     async def _fetch(self, url: str, body: str | None, headers: dict | None) -> str:
         """Run the actual request. GET when body is None, POST otherwise."""
         assert self._client is not None
-        kwargs: dict = {"headers": headers} if headers else {}
+        kwargs: dict[str, Any] = {"headers": headers} if headers else {}
         if body is None:
             response = await self._client.get(url, **kwargs)
         else:
@@ -122,7 +124,7 @@ class BaseHarvester(ABC):
         with gzip.open(path, "wt", encoding="utf-8") as f:
             f.write(content)
 
-    async def _load_from_cache(self, id_: str) -> RetrievalResult | None:
+    async def _load_from_cache(self, id_: str) -> RetrievalResult[T] | None:
         """Return a cached ``RetrievalResult``, or ``None`` on miss or corrupt entry."""
         if not self._use_cache:
             return None
@@ -135,9 +137,9 @@ class BaseHarvester(ABC):
                 pass  # corrupt or unreadable → treat as miss
         return None
 
-    async def _iter_chunk(self, chunk: list[str]) -> AsyncIterator[RetrievalResult]:
+    async def _iter_chunk(self, chunk: list[str]) -> AsyncIterator[RetrievalResult[T]]:
         """A large batch will be chunked into groups of requests. Fetch items from cache or remote as needed."""
-        cached: dict[str, RetrievalResult] = {}
+        cached: dict[str, RetrievalResult[T]] = {}
         uncached: list[str] = []
 
         for id_ in chunk:
@@ -147,7 +149,7 @@ class BaseHarvester(ABC):
             else:
                 uncached.append(id_)
 
-        fetched: dict[str, RetrievalResult] = {}
+        fetched: dict[str, RetrievalResult[T]] = {}
         if uncached:
             try:
                 url, body, headers = await self._build_request(uncached)
@@ -177,7 +179,7 @@ class BaseHarvester(ABC):
 
     async def iter_results(
         self, ids: AsyncIterable[str] | Iterable[str]
-    ) -> AsyncIterator[RetrievalResult]:
+    ) -> AsyncIterator[RetrievalResult[T]]:
         """
         Retrieve all results, handling pagination where necessary. Consumed via an iterable to allow
             backpressure when harvesting at scale. Uses cache where possible.
@@ -212,7 +214,7 @@ class BaseHarvester(ABC):
 
     async def iter_cached(
         self, *, since: datetime | None = None
-    ) -> AsyncIterator[RetrievalResult]:
+    ) -> AsyncIterator[RetrievalResult[T]]:
         """Yield parsed records from the local cache.
 
         :param since: If provided, only yield records whose cache file is newer than this datetime.
@@ -235,7 +237,7 @@ class BaseHarvester(ABC):
             except Exception as exc:
                 yield RetrievalResult(id=path.stem, error=str(exc))
 
-    async def retrieve(self, id_: str) -> DataCite:
+    async def retrieve(self, id_: str) -> T:
         """
         Convenience helper to fetch a single record by ID.
 

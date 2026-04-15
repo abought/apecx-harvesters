@@ -15,7 +15,7 @@ from .parser import _parse_preprint
 _BASE_URL = "https://api.biorxiv.org/details"
 
 
-class BiorxivHarvester(BaseHarvester):
+class BiorxivHarvester(BaseHarvester[BiorXivContainer]):
     """Fetch a biorxiv or medRxiv preprint. In practice, most people may prefer DOI harvesters instead
         as a more generic solution"""
     _BATCH_SIZE = 1
