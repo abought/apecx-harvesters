@@ -7,7 +7,7 @@ https://support.datacite.org/docs/datacite-xml-to-json-mapping
 ## Commands 
 * Test: `uv run pytest`
 * Lint: `uv run ruff check`
-* Types: `uv run pyright src/`
+* Types: `uv run pyright src/ tests/`
 
 ## Coding style
 * Comments should be concise. Do not provide usage examples or explain the algorithm unless it is unintuitive
@@ -15,7 +15,7 @@ https://support.datacite.org/docs/datacite-xml-to-json-mapping
 * Avoid creating fake data, such as a parser that emits synthetic values.
 
 ## Development Process
-* Each time a new harvester is written, add a link to the API documentation and examples to `design/API_REFERENCE.md`. If you consult additional documents to understand the response schema, include those too.
+* Each time a new harvester is written, add a link to the API documentation and examples to `design/API_REFERENCE.md`. If you consult additional documents to understand the response schema, include those too. Be concise: this is a reference sheet, not an architectural overview.
   * Consult `API_REFERENCE.md` for key references before initiating a web search for the spec.
 
 ## Architecture

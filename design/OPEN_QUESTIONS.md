@@ -24,17 +24,6 @@ The prior art (`prior_art/tools/iedb_basic_data_collector/`) harvests epitope da
 - What is the canonical identifier? (Prior art used MD5 hash; IEDB IRI may be more appropriate.)
 
 
-## PubMed: PubmedBookArticle support
-
-PubMed search results can include book entries (`PubmedBookArticle`). These are currently retrieved from efetch but rejected at parse time with an explicit unsupported-type error. Key differences from `PubmedArticle`:
-
-- Title is in `BookDocument/Book/BookTitle` (whole book) or `BookDocument/ArticleTitle` (chapter)
-- Authors appear at both the book and section level
-- No journal; publisher info is in `BookDocument/Book/Publisher`
-- Dates are in `BookDocument/Book/BeginningDate` / `ContributionDate`
-
-The `PubmedBookArticle` DTD section in the [PubMed XML DTD](https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd) is the reference. NBK books (NCBI Bookshelf) are the most common source.
-
 ## PubMed: search richness
 
 PubMed supports many search options beyond what the current `PubMedHarvester` exposes. Expand search before unifying the search interface across harvesters. Defer interface unification until search operations are richer.

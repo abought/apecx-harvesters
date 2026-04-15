@@ -32,11 +32,15 @@ line-length = 100
 exclude = ["prior_art"]
 
 [tool.pyright]
-# venvPath/venv: needed by standalone Claude Code's pyright LSP (runs outside venv)
-# Does not interfere with IDE or uv commands
+include = ["src", "tests"]
+exclude = ["prior_art"]
+# venvPath/venv: needed by standalone Claude Code's pyright LSP (runs outside venv).
+# Without these, the LSP reports spurious reportMissingImports on all third-party packages. 
+#    It also sometimes experiences transient errors after file moves
+# Does not interfere with IDE or `uv run pyright`. 
 venvPath = "."
 venv = ".venv"
-exclude = ["prior_art"]
+
 
 
 [dependency-groups]
