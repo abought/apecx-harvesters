@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
 from collections.abc import AsyncIterator
@@ -12,6 +11,7 @@ import httpx
 import orjson
 
 from ..base.parser import parse_author_name as _parse_author_name
+from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
 
 def pubmed_author_term(name: str | None = None, orcid: str | None = None) -> str:
@@ -83,9 +83,11 @@ async def _esearch(
     client: httpx.AsyncClient,
     retstart: int = 0,
     retmax: int = 0,
-    requests_per_second: float | None,
+    rate_limiter: RateLimiter | None,
 ) -> dict:
     """Make a single eSearch request and return the ``esearchresult`` dict."""
+    if rate_limiter is not None:
+        await rate_limiter.acquire()
     response = await client.get(
         _ESEARCH_URL,
         params={
@@ -96,11 +98,14 @@ async def _esearch(
             "retmax": retmax,
         },
     )
+    if response.is_error:
+        _log.warning(
+            "HTTP %d for eSearch — response headers: %s",
+            response.status_code, dict(response.headers),
+        )
     response.raise_for_status()
     clean = _CONTROL_CHARS_RE.sub(b"", response.content)
     result = orjson.loads(clean)["esearchresult"]
-    if requests_per_second is not None:
-        await asyncio.sleep(1.0 / requests_per_second)
     if "ERROR" in result:
         raise ValueError(f"PubMed eSearch error: {result['ERROR']}")
     if "querytranslation" in result:
@@ -112,10 +117,10 @@ async def _count(
     term: str,
     *,
     client: httpx.AsyncClient,
-    requests_per_second: float | None,
+    rate_limiter: RateLimiter | None,
 ) -> int:
     """Return the total result count for *term* without fetching any IDs."""
-    result = await _esearch(term, client=client, retmax=0, requests_per_second=requests_per_second)
+    result = await _esearch(term, client=client, retmax=0, rate_limiter=rate_limiter)
     return int(result["count"])
 
 
@@ -124,7 +129,7 @@ async def _fetch_ids(
     *,
     client: httpx.AsyncClient,
     page_size: int,
-    requests_per_second: float | None,
+    rate_limiter: RateLimiter | None,
 ) -> AsyncIterator[str]:
     """Yield all IDs for *term*, paginating up to _RESULT_LIMIT records."""
     start = 0
@@ -135,7 +140,7 @@ async def _fetch_ids(
             client=client,
             retstart=start,
             retmax=page_size,
-            requests_per_second=requests_per_second,
+            rate_limiter=rate_limiter,
         )
         if total is None:
             total = int(result["count"])
@@ -154,7 +159,7 @@ async def _search_bounded(
     *,
     client: httpx.AsyncClient,
     page_size: int,
-    requests_per_second: float | None,
+    rate_limiter: RateLimiter | None,
 ) -> AsyncIterator[str]:
     """
     Yield IDs for *term* within [start_date, end_date], recursively bisecting
@@ -164,7 +169,7 @@ async def _search_bounded(
     only the first _RESULT_LIMIT results are returned.
     """
     date_term = f"({term}) AND {start_date:%Y/%m/%d}:{end_date:%Y/%m/%d}[pdat]"
-    n = await _count(date_term, client=client, requests_per_second=requests_per_second)
+    n = await _count(date_term, client=client, rate_limiter=rate_limiter)
 
     if n == 0:
         return
@@ -174,7 +179,7 @@ async def _search_bounded(
             date_term,
             client=client,
             page_size=page_size,
-            requests_per_second=requests_per_second,
+            rate_limiter=rate_limiter,
         ):
             yield pmid
         return
@@ -190,7 +195,7 @@ async def _search_bounded(
             date_term,
             client=client,
             page_size=page_size,
-            requests_per_second=requests_per_second,
+            rate_limiter=rate_limiter,
         ):
             yield pmid
         return
@@ -203,7 +208,7 @@ async def _search_bounded(
         mid,
         client=client,
         page_size=page_size,
-        requests_per_second=requests_per_second,
+        rate_limiter=rate_limiter,
     ):
         yield pmid
     async for pmid in _search_bounded(
@@ -212,7 +217,7 @@ async def _search_bounded(
         end_date,
         client=client,
         page_size=page_size,
-        requests_per_second=requests_per_second,
+        rate_limiter=rate_limiter,
     ):
         yield pmid
 
@@ -222,7 +227,7 @@ async def search(
     *,
     client: httpx.AsyncClient | None = None,
     page_size: int = _DEFAULT_PAGE_SIZE,
-    requests_per_second: float | None = _default_rate_limit,
+    rate_limiter: RateLimiter | None = None,
 ) -> AsyncIterator[str]:
     """
     Yield PubMed IDs matching *term*, transparently paginating through all results.
@@ -240,15 +245,17 @@ async def search(
     :param term: PubMed query string.
     :param client: Optional shared HTTP client.
     :param page_size: IDs per page (max 10,000).
-    :param requests_per_second: Maximum request rate. NCBI allows 3 req/s without an API key;
-        pass a lower value when sharing the budget with concurrent retrieval.
+    :param rate_limiter: Rate limiter. Pass the same instance to the harvester to share the
+        NCBI budget (3 req/s without an API key) across search and retrieval.
     """
+    if rate_limiter is None:
+        rate_limiter = RateLimiter(_default_rate_limit)
     owned = client is None
     if owned:
         client = httpx.AsyncClient()
 
     try:
-        total = await _count(term, client=client, requests_per_second=requests_per_second)
+        total = await _count(term, client=client, rate_limiter=rate_limiter)
         _log.info("Total results: %d", total)
 
         if total <= _RESULT_LIMIT:
@@ -256,7 +263,7 @@ async def search(
                 term,
                 client=client,
                 page_size=page_size,
-                requests_per_second=requests_per_second,
+                rate_limiter=rate_limiter,
             ):
                 yield pmid
         else:
@@ -272,7 +279,7 @@ async def search(
                 today,
                 client=client,
                 page_size=page_size,
-                requests_per_second=requests_per_second,
+                rate_limiter=rate_limiter,
             ):
                 yield pmid
     finally:

@@ -70,7 +70,7 @@ class TestSearchBounded:
             async with httpx.AsyncClient() as client:
                 ids = [x async for x in _search_bounded(
                     "HIV", _START, _END,
-                    client=client, page_size=500, requests_per_second=None,
+                    client=client, page_size=500, rate_limiter=None,
                 )]
         assert ids == ["1", "2", "3"]
 
@@ -82,7 +82,7 @@ class TestSearchBounded:
             async with httpx.AsyncClient() as client:
                 ids = [x async for x in _search_bounded(
                     "HIV", _START, _END,
-                    client=client, page_size=500, requests_per_second=None,
+                    client=client, page_size=500, rate_limiter=None,
                 )]
         assert ids == []
         assert route.call_count == 1  # only the count probe
@@ -113,7 +113,7 @@ class TestSearchBounded:
             async with httpx.AsyncClient() as client:
                 ids = [x async for x in _search_bounded(
                     "HIV", _START, _END,
-                    client=client, page_size=500, requests_per_second=None,
+                    client=client, page_size=500, rate_limiter=None,
                 )]
 
         assert ids == first_ids + second_ids
@@ -157,7 +157,7 @@ class TestSearchBounded:
             async with httpx.AsyncClient() as client:
                 ids = [x async for x in _search_bounded(
                     "HIV", _START, _END,
-                    client=client, page_size=500, requests_per_second=None,
+                    client=client, page_size=500, rate_limiter=None,
                 )]
 
         assert ids == ["1", "2", "3", "4", "5", "6"]
@@ -185,7 +185,7 @@ class TestSearchBounded:
                 async with httpx.AsyncClient() as client:
                     ids = [x async for x in _search_bounded(
                         "HIV", day, day,
-                        client=client, page_size=500, requests_per_second=None,
+                        client=client, page_size=500, rate_limiter=None,
                     )]
 
         assert 0 < len(ids) < 15_000
@@ -204,7 +204,7 @@ class TestSearchBounded:
             async with httpx.AsyncClient() as client:
                 ids = [x async for x in _search_bounded(
                     "HIV", _START, _END,
-                    client=client, page_size=2, requests_per_second=None,
+                    client=client, page_size=2, rate_limiter=None,
                 )]
         assert ids == ["1", "2", "3", "4", "5"]
 
@@ -222,7 +222,7 @@ class TestSearch:
                 _response(3),                    # initial count
                 _response(3, ["1", "2", "3"]),   # fetch page
             ))
-            ids = [x async for x in search("HIV", requests_per_second=None)]
+            ids = [x async for x in search("HIV", rate_limiter=None)]
 
         assert ids == ["1", "2", "3"]
         for call in route.calls:
@@ -247,7 +247,7 @@ class TestSearch:
 
         with respx.mock:
             route = respx.get(_ESEARCH_URL).mock(side_effect=handler)
-            ids = [x async for x in search("flavivirus", requests_per_second=None)]
+            ids = [x async for x in search("flavivirus", rate_limiter=None)]
 
         assert len(ids) > 0
         assert all(id.startswith("pmid_") for id in ids)
@@ -263,7 +263,7 @@ class TestSearch:
         # one request, sees an empty idlist, and exits — so total calls is 2.
         with respx.mock:
             route = respx.get(_ESEARCH_URL).mock(return_value=_response(0))
-            ids = [x async for x in search("zzz_no_results", requests_per_second=None)]
+            ids = [x async for x in search("zzz_no_results", rate_limiter=None)]
 
         assert ids == []
         assert route.call_count == 2  # count probe + one fetch that returns []
@@ -275,5 +275,5 @@ class TestSearch:
                 200, json={"esearchresult": {"count": "0", "idlist": [], "ERROR": "Invalid term"}}
             ))
             with pytest.raises(ValueError, match="Invalid term"):
-                async for _ in search("bad[term", requests_per_second=None):
+                async for _ in search("bad[term", rate_limiter=None):
                     pass

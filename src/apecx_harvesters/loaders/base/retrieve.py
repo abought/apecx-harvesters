@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import gzip
+import logging
 import re
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterable, AsyncIterator, Iterable
@@ -13,6 +14,9 @@ from typing import Any, ClassVar, Generic, TypeVar
 import httpx
 
 from .model import DataCite
+from .rate_limit import RateLimiter
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_CACHE_ROOT = Path(".cache")
 
@@ -50,17 +54,19 @@ class BaseHarvester(ABC, Generic[T]):
         use_cache: bool = True,
         cache_root: Path | str | None = None,
         client: httpx.AsyncClient | None = None,
-        requests_per_second: float | None = None,
+        rate_limiter: RateLimiter | None = None,
     ) -> None:
         self._use_cache = use_cache
         self._cache_root = Path(cache_root) if cache_root is not None else _DEFAULT_CACHE_ROOT
         self._client = client
-        # None means "use the class default"; pass an explicit float to override (e.g. to share
-        # a rate budget across concurrent search and retrieval against the same host).
-        self._requests_per_second: float | None = (
-            requests_per_second if requests_per_second is not None
-            else self._DEFAULT_REQUESTS_PER_SECOND
-        )
+        # If no limiter is provided, create one from the class default (if set).
+        # Pass an explicit RateLimiter to share the budget with concurrent search calls.
+        if rate_limiter is not None:
+            self._rate_limiter: RateLimiter | None = rate_limiter
+        elif self._DEFAULT_REQUESTS_PER_SECOND is not None:
+            self._rate_limiter = RateLimiter(self._DEFAULT_REQUESTS_PER_SECOND)
+        else:
+            self._rate_limiter = None
 
     async def _cache_path(self, id_: str) -> Path:
         """Return the cache file path for a single item ID."""
@@ -109,14 +115,19 @@ class BaseHarvester(ABC, Generic[T]):
     async def _fetch(self, url: str, body: str | None, headers: dict | None) -> str:
         """Run the actual request. GET when body is None, POST otherwise."""
         assert self._client is not None
+        if self._rate_limiter is not None:
+            await self._rate_limiter.acquire()
         kwargs: dict[str, Any] = {"headers": headers} if headers else {}
         if body is None:
             response = await self._client.get(url, **kwargs)
         else:
             response = await self._client.post(url, content=body, **kwargs)
+        if response.is_error:
+            logger.warning(
+                "HTTP %d for %s — response headers: %s",
+                response.status_code, url, dict(response.headers),
+            )
         response.raise_for_status()
-        if self._requests_per_second is not None:
-            await asyncio.sleep(1.0 / self._requests_per_second)
         return response.text
 
     async def _cache_save(self, path: Path, content: str) -> None:

@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import asyncio
 import urllib.parse
 from collections.abc import AsyncIterator
 
 import httpx
 
 from ..base.parser import parse_author_name as _parse_author_name
+from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
 
 _SEARCH_BASE = "https://www.ebi.ac.uk/emdb/api/search"
@@ -57,7 +57,7 @@ async def search(
     *,
     client: httpx.AsyncClient | None = None,
     page_size: int = _DEFAULT_PAGE_SIZE,
-    requests_per_second: float | None = _default_rate_limit,
+    rate_limiter: RateLimiter | None = None,
 ) -> AsyncIterator[str]:
     """
     Yield EMDB entry IDs matching *term*, transparently paginating through all results.
@@ -68,8 +68,11 @@ async def search(
     :param term: Lucene query string (e.g. ``'author:"Smith J"'``).
     :param client: Optional shared HTTP client.
     :param page_size: Results per page.
-    :param requests_per_second: Maximum request rate.
+    :param rate_limiter: Shared rate limiter. Pass the same instance to the harvester to share the
+        EBI request budget across search and retrieval. A default-rate limiter is created
+        automatically when none is provided.
     """
+    limiter: RateLimiter = rate_limiter if rate_limiter is not None else RateLimiter(_default_rate_limit)
     owned = client is None
     if owned:
         client = httpx.AsyncClient()
@@ -78,14 +81,13 @@ async def search(
         url = f"{_SEARCH_BASE}/{urllib.parse.quote(term)}"
         page = 1
         while True:
+            await limiter.acquire()
             response = await client.get(
                 url,
                 params={"rows": page_size, "page": page, "fl": "emdb_id"},
                 headers={"Accept": "text/csv"},
             )
             response.raise_for_status()
-            if requests_per_second is not None:
-                await asyncio.sleep(1.0 / requests_per_second)
 
             # Response is CSV: first line is the header, remaining lines are IDs.
             lines = response.text.splitlines()

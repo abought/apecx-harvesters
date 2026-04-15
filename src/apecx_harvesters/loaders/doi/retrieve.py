@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import gzip
 import re
 from collections.abc import AsyncIterator
@@ -76,10 +75,10 @@ class DOIHarvester(BaseHarvester[DataCite]):
         if unknown:
             try:
                 assert self._client is not None
+                if self._rate_limiter is not None:
+                    await self._rate_limiter.acquire()
                 response = await self._client.get(f"{_RA_API}/{','.join(unknown)}")
                 response.raise_for_status()
-                if self._requests_per_second is not None:
-                    await asyncio.sleep(1.0 / self._requests_per_second)
                 for entry in response.json():
                     doi = entry.get("DOI", "").lower()
                     ra = entry.get("RA")

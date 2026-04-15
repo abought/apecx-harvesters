@@ -19,6 +19,7 @@ from datetime import date
 import httpx
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
+from apecx_harvesters.loaders.base import RateLimiter
 from apecx_harvesters.loaders.emdb import EMDBHarvester
 from apecx_harvesters.loaders.emdb.constants import rate_limit as _EMDB_RATE_LIMIT
 from apecx_harvesters.loaders.emdb.search import search as emdb_search
@@ -41,24 +42,28 @@ async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
         pubmed_term = term
     pdb_query = SearchQuery.full_text(term)
 
+    pubmed_limiter = RateLimiter(_PUBMED_RATE_LIMIT, name="pubmed")
+    pdb_limiter = RateLimiter(_PDB_RATE_LIMIT, name="pdb")
+    emdb_limiter = RateLimiter(_EMDB_RATE_LIMIT, name="emdb")
+
     async with httpx.AsyncClient() as client:
-        pubmed = PubMedHarvester(client=client, requests_per_second=_PUBMED_RATE_LIMIT / 2)
-        pdb = PDBHarvester(client=client, requests_per_second=_PDB_RATE_LIMIT / 2)
-        emdb = EMDBHarvester(client=client, requests_per_second=_EMDB_RATE_LIMIT / 2)
+        pubmed = PubMedHarvester(client=client, rate_limiter=pubmed_limiter)
+        pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter)
+        emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter)
 
         await run_parallel(
             PipelineSpec(
-                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, requests_per_second=_PUBMED_RATE_LIMIT / 2)),
+                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter)),
                 sink=report("pubmed"),
                 name="pubmed",
             ),
             PipelineSpec(
-                source=pdb.iter_results(pdb_search(pdb_query, client=client, requests_per_second=_PDB_RATE_LIMIT / 2)),
+                source=pdb.iter_results(pdb_search(pdb_query, client=client, rate_limiter=pdb_limiter)),
                 sink=report("pdb"),
                 name="pdb",
             ),
             PipelineSpec(
-                source=emdb.iter_results(emdb_search(term, client=client, requests_per_second=_EMDB_RATE_LIMIT / 2)),
+                source=emdb.iter_results(emdb_search(term, client=client, rate_limiter=emdb_limiter)),
                 sink=report("emdb"),
                 name="emdb",
             ),
@@ -90,6 +95,12 @@ def main() -> None:
         metavar="YEAR",
         help="Latest publication year for PubMed results. Omit to search all years.",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        default=False,
+        help="Enable debug logging (rate limiter timing, HTTP details).",
+    )
     args = parser.parse_args()
 
     begin, end = args.begin_year, args.end_year
@@ -97,7 +108,8 @@ def main() -> None:
         begin, end = end, begin
 
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
-    logging.getLogger("apecx_harvesters").setLevel(logging.INFO)
+    log_level = logging.DEBUG if args.debug else logging.INFO
+    logging.getLogger("apecx_harvesters").setLevel(log_level)
     asyncio.run(_run(args.term, begin, end))
 
 
