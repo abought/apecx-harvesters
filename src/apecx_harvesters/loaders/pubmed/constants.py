@@ -1,3 +1,5 @@
 # NCBI allows 3 req/s without an API key; 10 req/s with one.
-# 2.75 req/s keeps 4 consecutive requests >1s apart (otherwise shared rate limiters request too much)
-rate_limit: float = 2.75
+# Apply small fudge factor because we still get 429s if too close to the max
+_margin = 0.9
+rate_limit: float = 3 * _margin
+rate_limit_with_key: float = 10.0 * _margin

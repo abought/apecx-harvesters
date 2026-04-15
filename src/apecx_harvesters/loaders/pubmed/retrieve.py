@@ -21,9 +21,15 @@ class PubMedHarvester(BaseHarvester[PubMedContainer]):
     _CACHE_DIR = "pubmed"
     _DEFAULT_REQUESTS_PER_SECOND: ClassVar[float | None] = rate_limit
 
+    def __init__(self, *, api_key: str | None = None, **kwargs: object) -> None:
+        super().__init__(**kwargs)  # type: ignore[arg-type]
+        self._api_key = api_key
+
     async def _build_request(self, ids: list[str]) -> tuple[str, str | None, dict | None]:
         # POST avoids 414 URI Too Long when batch has many IDs (NCBI recommends POST for large lists)
         body = f"db=pubmed&id={','.join(ids)}&retmode=xml"
+        if self._api_key is not None:
+            body += f"&api_key={self._api_key}"
         return _EFETCH_URL, body, {"Content-Type": "application/x-www-form-urlencoded"}
 
     async def _split_batch(self, content: str, ids: list[str]) -> dict[str, str]:

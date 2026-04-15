@@ -29,11 +29,17 @@ from apecx_harvesters.loaders.pdb.search import SearchQuery
 from apecx_harvesters.loaders.pdb.search import search as pdb_search
 from apecx_harvesters.loaders.pubmed import PubMedHarvester
 from apecx_harvesters.loaders.pubmed.constants import rate_limit as _PUBMED_RATE_LIMIT
+from apecx_harvesters.loaders.pubmed.constants import rate_limit_with_key as _PUBMED_RATE_LIMIT_WITH_KEY
 from apecx_harvesters.loaders.pubmed.search import search as pubmed_search
 from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 
 
-async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
+async def _run(
+    term: str,
+    begin_year: int | None,
+    end_year: int | None,
+    api_key: str | None,
+) -> None:
     if begin_year is not None or end_year is not None:
         start = begin_year or 1800
         end = end_year or date.today().year
@@ -42,18 +48,19 @@ async def _run(term: str, begin_year: int | None, end_year: int | None) -> None:
         pubmed_term = term
     pdb_query = SearchQuery.full_text(term)
 
-    pubmed_limiter = RateLimiter(_PUBMED_RATE_LIMIT, name="pubmed")
+    pubmed_rate = _PUBMED_RATE_LIMIT_WITH_KEY if api_key is not None else _PUBMED_RATE_LIMIT
+    pubmed_limiter = RateLimiter(pubmed_rate, name="pubmed")
     pdb_limiter = RateLimiter(_PDB_RATE_LIMIT, name="pdb")
     emdb_limiter = RateLimiter(_EMDB_RATE_LIMIT, name="emdb")
 
     async with httpx.AsyncClient() as client:
-        pubmed = PubMedHarvester(client=client, rate_limiter=pubmed_limiter)
+        pubmed = PubMedHarvester(client=client, rate_limiter=pubmed_limiter, api_key=api_key)
         pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter)
         emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter)
 
         await run_parallel(
             PipelineSpec(
-                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter)),
+                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter, api_key=api_key)),
                 sink=report("pubmed"),
                 name="pubmed",
             ),
@@ -95,6 +102,13 @@ def main() -> None:
         metavar="YEAR",
         help="Latest publication year for PubMed results. Omit to search all years.",
     )
+    # For now only pubmed has a key, revisit if more services need separate keys
+    parser.add_argument(
+        "--api-key",
+        default=None,
+        metavar="KEY",
+        help="NCBI API key. Raises the PubMed rate limit to 10 req/s (vs 3 req/s without).",
+    )
     parser.add_argument(
         "--debug",
         action="store_true",
@@ -110,7 +124,7 @@ def main() -> None:
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
     logging.getLogger("apecx_harvesters").setLevel(log_level)
-    asyncio.run(_run(args.term, begin, end))
+    asyncio.run(_run(args.term, begin, end, args.api_key))
 
 
 if __name__ == "__main__":

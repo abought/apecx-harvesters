@@ -85,20 +85,24 @@ async def _esearch(
     retstart: int = 0,
     retmax: int = 0,
     rate_limiter: RateLimiter | None,
+    api_key: str | None = None,
 ) -> dict:
     """Make a single eSearch request and return the ``esearchresult`` dict."""
+    params: dict[str, str | int] = {
+        "db": "pubmed",
+        "term": term,
+        "retmode": "json",
+        "retstart": retstart,
+        "retmax": retmax,
+    }
+    if api_key is not None:
+        params["api_key"] = api_key
     response = await _http_request(
         client,
         "GET",
         _ESEARCH_URL,
         rate_limiter=rate_limiter,
-        params={
-            "db": "pubmed",
-            "term": term,
-            "retmode": "json",
-            "retstart": retstart,
-            "retmax": retmax,
-        },
+        params=params,
     )
     response.raise_for_status()
     clean = _CONTROL_CHARS_RE.sub(b"", response.content)
@@ -115,9 +119,10 @@ async def _count(
     *,
     client: httpx.AsyncClient,
     rate_limiter: RateLimiter | None,
+    api_key: str | None = None,
 ) -> int:
     """Return the total result count for *term* without fetching any IDs."""
-    result = await _esearch(term, client=client, retmax=0, rate_limiter=rate_limiter)
+    result = await _esearch(term, client=client, retmax=0, rate_limiter=rate_limiter, api_key=api_key)
     return int(result["count"])
 
 
@@ -127,6 +132,7 @@ async def _fetch_ids(
     client: httpx.AsyncClient,
     page_size: int,
     rate_limiter: RateLimiter | None,
+    api_key: str | None = None,
 ) -> AsyncIterator[str]:
     """Yield all IDs for *term*, paginating up to _RESULT_LIMIT records."""
     start = 0
@@ -138,6 +144,7 @@ async def _fetch_ids(
             retstart=start,
             retmax=page_size,
             rate_limiter=rate_limiter,
+            api_key=api_key,
         )
         if total is None:
             total = int(result["count"])
@@ -157,6 +164,7 @@ async def _search_bounded(
     client: httpx.AsyncClient,
     page_size: int,
     rate_limiter: RateLimiter | None,
+    api_key: str | None = None,
 ) -> AsyncIterator[str]:
     """
     Yield IDs for *term* within [start_date, end_date], recursively bisecting
@@ -166,7 +174,7 @@ async def _search_bounded(
     only the first _RESULT_LIMIT results are returned.
     """
     date_term = f"({term}) AND {start_date:%Y/%m/%d}:{end_date:%Y/%m/%d}[pdat]"
-    n = await _count(date_term, client=client, rate_limiter=rate_limiter)
+    n = await _count(date_term, client=client, rate_limiter=rate_limiter, api_key=api_key)
 
     if n == 0:
         return
@@ -177,6 +185,7 @@ async def _search_bounded(
             client=client,
             page_size=page_size,
             rate_limiter=rate_limiter,
+            api_key=api_key,
         ):
             yield pmid
         return
@@ -193,6 +202,7 @@ async def _search_bounded(
             client=client,
             page_size=page_size,
             rate_limiter=rate_limiter,
+            api_key=api_key,
         ):
             yield pmid
         return
@@ -206,6 +216,7 @@ async def _search_bounded(
         client=client,
         page_size=page_size,
         rate_limiter=rate_limiter,
+        api_key=api_key,
     ):
         yield pmid
     async for pmid in _search_bounded(
@@ -215,6 +226,7 @@ async def _search_bounded(
         client=client,
         page_size=page_size,
         rate_limiter=rate_limiter,
+        api_key=api_key,
     ):
         yield pmid
 
@@ -225,6 +237,7 @@ async def search(
     client: httpx.AsyncClient | None = None,
     page_size: int = _DEFAULT_PAGE_SIZE,
     rate_limiter: RateLimiter | None = None,
+    api_key: str | None = None,
 ) -> AsyncIterator[str]:
     """
     Yield PubMed IDs matching *term*, transparently paginating through all results.
@@ -242,8 +255,8 @@ async def search(
     :param term: PubMed query string.
     :param client: Optional shared HTTP client.
     :param page_size: IDs per page (max 10,000).
-    :param rate_limiter: Rate limiter. Pass the same instance to the harvester to share the
-        NCBI budget (3 req/s without an API key) across search and retrieval.
+    :param rate_limiter: Shared rate limit 
+    :param api_key: NCBI API key. Allows higher request limits.
     """
     if rate_limiter is None:
         rate_limiter = RateLimiter(_default_rate_limit)
@@ -252,7 +265,7 @@ async def search(
         client = httpx.AsyncClient()
 
     try:
-        total = await _count(term, client=client, rate_limiter=rate_limiter)
+        total = await _count(term, client=client, rate_limiter=rate_limiter, api_key=api_key)
         _log.info("Total results: %d", total)
 
         if total <= _RESULT_LIMIT:
@@ -261,6 +274,7 @@ async def search(
                 client=client,
                 page_size=page_size,
                 rate_limiter=rate_limiter,
+                api_key=api_key,
             ):
                 yield pmid
         else:
@@ -277,6 +291,7 @@ async def search(
                 client=client,
                 page_size=page_size,
                 rate_limiter=rate_limiter,
+                api_key=api_key,
             ):
                 yield pmid
     finally:
