@@ -8,7 +8,7 @@ from typing import ClassVar
 from ..base import BaseHarvester
 from .constants import rate_limit
 from .model import PubMedContainer
-from .parser import _parse_article
+from .parser import _parse_article, _parse_book_article
 
 _EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 
@@ -43,6 +43,5 @@ class PubMedHarvester(BaseHarvester[PubMedContainer]):
     async def _parse_item(self, content: str) -> PubMedContainer:
         root = ET.fromstring(content)
         if root.tag == "PubmedBookArticle":
-            pmid = root.findtext(".//PMID") or "unknown"
-            raise ValueError(f"PMID {pmid}: PubmedBookArticle entries are not yet supported")
+            return _parse_book_article(root)
         return _parse_article(root)

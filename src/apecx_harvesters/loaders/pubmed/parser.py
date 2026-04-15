@@ -15,6 +15,10 @@ from ..base import (
     FundingReference,
     Publisher,
     RelatedItem,
+    RelatedIdentifierType,
+    RelatedItemIdentifier,
+    RelatedItemType,
+    RelationType,
     ResourceType,
     ResourceTypeGeneral,
 )
@@ -61,7 +65,7 @@ def _parse_article(article_elem: ET.Element) -> PubMedContainer:
 
     journal_ri = _build_journal_container(article)
     return PubMedContainer.new(
-        creators=_parse_creators(article),
+        creators=_parse_creators(article.findall("AuthorList/Author")),
         title=_parse_title(article),
         description=_parse_abstract(article),
         publisher=Publisher(name=article.findtext("Journal/Title") or ""),
@@ -78,9 +82,92 @@ def _parse_article(article_elem: ET.Element) -> PubMedContainer:
     )
 
 
-def _parse_creators(article: ET.Element) -> list[Creator]:
+def _parse_book_article(elem: ET.Element) -> PubMedContainer:
+    """Parse one ``<PubmedBookArticle>`` element into a ``PubMedContainer``."""
+    book_doc = elem.find("BookDocument")
+    pubmed_book_data = elem.find("PubmedBookData")
+    if book_doc is None:
+        raise ValueError("Missing <BookDocument>")
+    if pubmed_book_data is None:
+        raise ValueError("Missing <PubmedBookData>")
+
+    pmid = book_doc.findtext("PMID")
+    if pmid is None:
+        raise ValueError("Missing PMID")
+
+    book = book_doc.find("Book")
+
+    # Chapter title; fall back to book title when absent.
+    title_elem = book_doc.find("ArticleTitle")
+    title = "".join(title_elem.itertext()).strip() if title_elem is not None else ""
+    if not title and book is not None:
+        title = book.findtext("BookTitle") or ""
+
+    # Chapter authors only — exclude the editor list.
+    chapter_authors = book_doc.findall("AuthorList[@Type='authors']/Author")
+    if not chapter_authors:
+        chapter_authors = book_doc.findall("AuthorList/Author")
+
+    publisher_name = ""
+    pub_year = None
+    book_title = None
+    isbn = None
+    if book is not None:
+        publisher_name = book.findtext("Publisher/PublisherName") or ""
+        pub_year = book.findtext("PubDate/Year")
+        book_title = book.findtext("BookTitle")
+        isbn = book.findtext("Isbn")
+
+    alternate_ids: list[AlternateIdentifier] = [
+        AlternateIdentifier(alternateIdentifier=pmid, alternateIdentifierType="PMID")
+    ]
+    for aid in book_doc.findall("ArticleIdList/ArticleId"):
+        if aid.get("IdType") == "bookaccession" and aid.text:
+            alternate_ids.append(
+                AlternateIdentifier(alternateIdentifier=aid.text, alternateIdentifierType="NCBI Bookshelf")
+            )
+
+    doi = _find_article_id(pubmed_book_data, "doi")
+
+    pub_date: list[Date] = []
+    if pub_year:
+        pub_date.append(Date(date=f"{pub_year}-01-01T00:00:00Z", dateType=DateType.Created))
+
+    book_ri: RelatedItem | None = None
+    if book_title:
+        book_ri = RelatedItem(
+            relatedItemType=RelatedItemType.Book,
+            relationType=RelationType.IsPublishedIn,
+            relatedItemIdentifier=RelatedItemIdentifier(
+                relatedItemIdentifier=isbn,
+                relatedItemIdentifierType=RelatedIdentifierType.ISBN,
+            ) if isbn else None,
+            titles=[],
+        )
+
+    pub_types = [pt.text for pt in book_doc.findall("PublicationType") if pt.text]
+
+    return PubMedContainer.new(
+        creators=_parse_creators(chapter_authors),
+        title=title,
+        description=_parse_abstract(book_doc),
+        publisher=Publisher(name=publisher_name),
+        publicationYear=pub_year,
+        resourceType=ResourceType(resourceTypeGeneral=ResourceTypeGeneral.BookChapter),
+        subjects=[],
+        dates=pub_date,
+        fundingReferences=[],
+        doi=doi,
+        alternateIdentifiers=alternate_ids,
+        relatedItems=[book_ri] if book_ri else [],
+        pubmed=PubMedFields(publication_types=pub_types),
+        language=book_doc.findtext("Language"),
+    )
+
+
+def _parse_creators(author_elems: list[ET.Element]) -> list[Creator]:
     """
-    Build `Creator` objects from ``<AuthorList><Author>`` elements.
+    Build `Creator` objects from a list of ``<Author>`` elements.
 
     * The first ``<AffiliationInfo><Affiliation>`` is captured per author.
     * ``<Identifier Source="ORCID">`` values are normalised to bare IDs
@@ -90,7 +177,7 @@ def _parse_creators(article: ET.Element) -> list[Creator]:
       the primary one.
     """
     creators = []
-    for author in article.findall("AuthorList/Author"):
+    for author in author_elems:
         family = author.findtext("LastName")
         given = author.findtext("ForeName")
 

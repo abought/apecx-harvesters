@@ -34,6 +34,7 @@ FIXTURE_DIR = Path(__file__).parent / "fixtures"
 NATCOMM_FIXTURE = FIXTURE_DIR / "pubmed_33594067.xml"
 ORTHODONTICS_FIXTURE = FIXTURE_DIR / "pubmed_32672655.xml"
 BATCH_FIXTURE = FIXTURE_DIR / "pubmed_batch_33594067_32672655.xml"
+BOOK_ARTICLE_FIXTURE = FIXTURE_DIR / "pubmed_efetch_21413253.xml"
 
 
 # ---------------------------------------------------------------------------
@@ -373,6 +374,76 @@ class TestBatchParsing:
 # ---------------------------------------------------------------------------
 # Error handling
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# PubmedBookArticle — PMID 21413253 (book chapter, Medical Microbiology)
+# ---------------------------------------------------------------------------
+
+class TestBookArticle:
+    @pytest.fixture(scope="class")
+    def record(self) -> PubMedContainer:
+        return _parse(BOOK_ARTICLE_FIXTURE.read_text())
+
+    def test_split_batch_includes_book_article(self):
+        harvester = PubMedHarvester()
+        result = asyncio.run(harvester._split_batch(BOOK_ARTICLE_FIXTURE.read_text(), []))
+        assert "21413253" in result
+
+    def test_resource_type_is_book_chapter(self, record):
+        assert record.resourceType is not None
+        assert record.resourceType.resourceTypeGeneral == ResourceTypeGeneral.BookChapter
+
+    def test_title_is_chapter_title(self, record):
+        assert "Alphaviruses" in record.titles[0].title
+        assert "Flaviviruses" in record.titles[0].title
+
+    def test_chapter_authors_not_editors(self, record):
+        names = [c.name for c in record.creators]
+        assert "Schmaljohn, Alan L." in names
+        assert "McClain, David" in names
+        # Baron is the book editor, not a chapter author
+        assert not any("Baron" in n for n in names)
+
+    def test_creator_count(self, record):
+        assert len(record.creators) == 2
+
+    def test_publisher_from_book(self, record):
+        assert "Texas" in record.publisher.name
+
+    def test_publication_year(self, record):
+        assert record.publicationYear == "1996"
+
+    def test_pmid_in_alternate_identifiers(self, record):
+        pmids = [a.alternateIdentifier for a in record.alternateIdentifiers
+                 if a.alternateIdentifierType == "PMID"]
+        assert "21413253" in pmids
+
+    def test_bookaccession_in_alternate_identifiers(self, record):
+        accs = [a.alternateIdentifier for a in record.alternateIdentifiers
+                if a.alternateIdentifierType == "NCBI Bookshelf"]
+        assert "NBK7633" in accs
+
+    def test_book_container_related_item(self, record):
+        books = [r for r in record.relatedItems if r.relatedItemType == RelatedItemType.Book]
+        assert len(books) == 1
+        assert books[0].relationType == RelationType.IsPublishedIn
+
+    def test_isbn_in_book_container(self, record):
+        books = [r for r in record.relatedItems if r.relatedItemType == RelatedItemType.Book]
+        assert books[0].relatedItemIdentifier is not None
+        assert books[0].relatedItemIdentifier.relatedItemIdentifierType == RelatedIdentifierType.ISBN
+
+    def test_abstract_present(self, record):
+        assert record.descriptions[0].description is not None
+        assert "alphavirus" in record.descriptions[0].description.lower()
+
+    def test_validates_against_schema(self, record):
+        import jsonschema
+        jsonschema.validate(
+            instance=record.to_dict(),
+            schema=PubMedContainer.json_schema(),
+        )
+
 
 class TestErrorHandling:
     def test_no_pubmed_article_returns_empty(self):
