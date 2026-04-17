@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import copy
 import re
+from collections import Counter
 from typing import Any, ClassVar, Type
 
 from apecx_harvesters.loaders.base.model import DataCite
@@ -38,19 +39,58 @@ _QUERY_DROP_DEF_FIELDS: dict[str, frozenset[str]] = {
 }
 
 
-def _collect_refs(node: Any) -> set[str]:
-    """Return all $defs names referenced anywhere in *node*."""
-    refs: set[str] = set()
+def _collect_refs(node: Any) -> Counter[str]:
+    """List and count every $defs reference occurring anywhere in *node*."""
+    counts: Counter[str] = Counter()
     if isinstance(node, dict):
         ref = node.get("$ref", "")
         if isinstance(ref, str) and ref.startswith("#/$defs/"):
-            refs.add(ref[len("#/$defs/"):])
+            counts[ref[len("#/$defs/"):]] += 1
         for v in node.values():
-            refs |= _collect_refs(v)
+            counts.update(_collect_refs(v))
     elif isinstance(node, list):
         for item in node:
-            refs |= _collect_refs(item)
-    return refs
+            counts.update(_collect_refs(item))
+    return counts
+
+
+def _substitute_refs(node: Any, replacements: dict[str, Any]) -> Any:
+    """Replace {"$ref": "#/$defs/X"} nodes with the corresponding def body."""
+    if isinstance(node, dict):
+        ref = node.get("$ref", "")
+        if isinstance(ref, str) and ref.startswith("#/$defs/"):
+            name = ref[len("#/$defs/"):]
+            if name in replacements:
+                # Recurse into the substituted body so that chained single-use
+                # refs (e.g. Title → TitleType) are fully resolved in one pass.
+                return _substitute_refs(copy.deepcopy(replacements[name]), replacements)
+        return {k: _substitute_refs(v, replacements) for k, v in node.items()}
+    elif isinstance(node, list):
+        return [_substitute_refs(item, replacements) for item in node]
+    return node
+
+
+def _inline_single_use_defs(schema: dict[str, Any]) -> dict[str, Any]:
+    """
+    Inline $defs referenced exactly once, leaving multi-use defs in place.
+    Iterates until no further single-use defs remain.
+    """
+    schema = copy.deepcopy(schema)
+    while True:
+        defs = schema.get("$defs", {})
+        if not defs:
+            break
+        counts = _collect_refs(schema)
+        single_use = {name for name, count in counts.items() if count == 1 and name in defs}
+        if not single_use:
+            break
+        schema = _substitute_refs(schema, {name: defs[name] for name in single_use})
+        remaining = {k: v for k, v in schema.get("$defs", {}).items() if k not in single_use}
+        if remaining:
+            schema["$defs"] = remaining
+        else:
+            schema.pop("$defs", None)
+    return schema
 
 
 def _prune_defs(schema: dict[str, Any]) -> dict[str, Any]:
@@ -59,13 +99,13 @@ def _prune_defs(schema: dict[str, Any]) -> dict[str, Any]:
     if not defs:
         return schema
     reachable: set[str] = set()
-    frontier = _collect_refs({k: v for k, v in schema.items() if k != "$defs"})
+    frontier = set(_collect_refs({k: v for k, v in schema.items() if k != "$defs"}))
     while frontier - reachable:
         newly_found = frontier - reachable
         reachable |= newly_found
         for name in newly_found:
             if name in defs:
-                frontier |= _collect_refs(defs[name])
+                frontier |= set(_collect_refs(defs[name]))
     result = {k: v for k, v in schema.items() if k != "$defs"}
     pruned = {k: v for k, v in defs.items() if k in reachable}
     if pruned:
@@ -248,4 +288,4 @@ class SchemaRegistry:
                     "description": def_body["description"],
                 }
 
-        return _prune_defs(schema)
+        return _inline_single_use_defs(_prune_defs(schema))

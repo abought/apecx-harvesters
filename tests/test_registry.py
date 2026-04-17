@@ -8,7 +8,12 @@ import pytest
 
 from apecx_harvesters.loaders.base import DataCite
 from apecx_harvesters.loaders.pdb import PDBContainer
-from apecx_harvesters.loaders.base.registry import SchemaRegistry, _BASE_PROPERTY_NAMES
+from apecx_harvesters.loaders.base.registry import (
+    SchemaRegistry,
+    _BASE_PROPERTY_NAMES,
+    _inline_single_use_defs,
+    _collect_refs,
+)
 
 
 class TestRegistration:
@@ -74,6 +79,58 @@ class TestCombinedJsonSchema:
         s1["properties"]["injected"] = {}
         s2 = SchemaRegistry.combined_json_schema()
         assert "injected" not in s2["properties"]
+
+
+class TestInlineSingleUseDefs:
+    def test_single_use_def_is_inlined(self):
+        schema = {
+            "properties": {"a": {"$ref": "#/$defs/A"}},
+            "$defs": {"A": {"type": "string", "description": "leaf"}},
+        }
+        result = _inline_single_use_defs(schema)
+        assert "$defs" not in result
+        assert result["properties"]["a"] == {"type": "string", "description": "leaf"}
+
+    def test_chained_single_use_defs_are_fully_inlined(self):
+        # A → B → C, all single-use: no dangling refs or leftover $defs.
+        schema = {
+            "properties": {"a": {"$ref": "#/$defs/A"}},
+            "$defs": {
+                "A": {"properties": {"b": {"$ref": "#/$defs/B"}}, "type": "object"},
+                "B": {"properties": {"c": {"$ref": "#/$defs/C"}}, "type": "object"},
+                "C": {"type": "string"},
+            },
+        }
+        result = _inline_single_use_defs(schema)
+        assert "$defs" not in result
+        assert not _collect_refs(result), "no $refs should remain"
+
+    def test_multi_use_def_is_preserved(self):
+        # Shared is referenced by both A and B — must stay in $defs.
+        schema = {
+            "properties": {
+                "a": {"$ref": "#/$defs/A"},
+                "b": {"$ref": "#/$defs/B"},
+            },
+            "$defs": {
+                "A": {"properties": {"s": {"$ref": "#/$defs/Shared"}}, "type": "object"},
+                "B": {"properties": {"s": {"$ref": "#/$defs/Shared"}}, "type": "object"},
+                "Shared": {"type": "string"},
+            },
+        }
+        result = _inline_single_use_defs(schema)
+        # A and B are single-use and get inlined; Shared remains.
+        assert "$defs" in result
+        assert "Shared" in result["$defs"]
+        assert "A" not in result.get("$defs", {})
+        assert "B" not in result.get("$defs", {})
+
+    def test_no_dangling_refs_in_query_schema(self):
+        schema = SchemaRegistry.query_json_schema()
+        defs = set(schema.get("$defs", {}).keys())
+        referenced = set(_collect_refs(schema).keys())
+        dangling = referenced - defs
+        assert not dangling, f"Dangling $refs in query schema: {dangling}"
 
 
 class TestSchemaConflictDetection:
