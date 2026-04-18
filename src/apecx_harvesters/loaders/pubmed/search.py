@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 from collections.abc import AsyncIterator
@@ -72,6 +73,12 @@ _RESULT_LIMIT = 9_999
 _ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 _DEFAULT_PAGE_SIZE = 500
 
+# PubMed occasionally returns HTTP 200 with an ERROR field whose text describes a backend
+# failure (e.g. "Search Backend failed: ... HTTP request returned 502 status").  These are
+# transient; permanent query errors (bad syntax, unknown field) do not match this pattern.
+_TRANSIENT_ESEARCH_RE = re.compile(r"Search Backend failed|HTTP request returned [45]\d\d", re.IGNORECASE)
+_ESEARCH_MAX_RETRIES = 3
+
 # PubMed's practical earliest records; used as the lower bound for date segmentation.
 # Note: records lacking a publication date (pdat) fall outside any bounded date range
 # and will not be returned when segmentation is active.
@@ -97,18 +104,29 @@ async def _esearch(
     }
     if api_key is not None:
         params["api_key"] = api_key
-    response = await _http_request(
-        client,
-        "GET",
-        _ESEARCH_URL,
-        rate_limiter=rate_limiter,
-        params=params,
-    )
-    response.raise_for_status()
-    clean = _CONTROL_CHARS_RE.sub(b"", response.content)
-    result = orjson.loads(clean)["esearchresult"]
-    if "ERROR" in result:
-        raise ValueError(f"PubMed eSearch error: {result['ERROR']}")
+    result: dict = {}
+    for attempt in range(_ESEARCH_MAX_RETRIES + 1):
+        response = await _http_request(
+            client,
+            "GET",
+            _ESEARCH_URL,
+            rate_limiter=rate_limiter,
+            params=params,
+        )
+        response.raise_for_status()
+        clean = _CONTROL_CHARS_RE.sub(b"", response.content)
+        result = orjson.loads(clean)["esearchresult"]
+        if "ERROR" not in result:
+            break
+        msg = result["ERROR"]
+        if not _TRANSIENT_ESEARCH_RE.search(msg) or attempt == _ESEARCH_MAX_RETRIES:
+            raise ValueError(f"PubMed eSearch error: {msg}")
+        wait = min(2.0 ** attempt, 60.0)
+        _log.warning(
+            "PubMed eSearch application-level error (attempt %d/%d); retrying in %.1fs: %s",
+            attempt + 1, _ESEARCH_MAX_RETRIES, wait, msg,
+        )
+        await asyncio.sleep(wait)
     if "querytranslation" in result:
         _log.debug("eSearch querytranslation: %s", result["querytranslation"])
     return result

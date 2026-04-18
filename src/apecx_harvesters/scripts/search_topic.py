@@ -121,7 +121,7 @@ def main() -> None:
     if begin is not None and end is not None and begin > end:
         begin, end = end, begin
 
-    logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
     logging.getLogger("apecx_harvesters").setLevel(log_level)
     asyncio.run(_run(args.term, begin, end, args.api_key))

@@ -66,9 +66,11 @@ async def run(
 
 async def run_parallel(*specs: PipelineSpec[Any]) -> list[Any]:
     """Run multiple pipelines concurrently and return their results in order."""
-    return list(
-        await asyncio.gather(*[
-            run(s.source, s.sink, s.transforms)
-            for s in specs
-        ])
+    results = await asyncio.gather(
+        *[run(s.source, s.sink, s.transforms) for s in specs],
+        return_exceptions=True,
     )
+    for spec, result in zip(specs, results):
+        if isinstance(result, BaseException):
+            logger.error("Pipeline %r failed: %s: %s", spec.name, type(result).__name__, result)
+    return list(results)

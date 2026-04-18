@@ -121,7 +121,7 @@ def main() -> None:
     if args.author is None and args.orcid is None:
         parser.error("At least one of --author or --orcid is required.")
 
-    logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
     logging.getLogger("apecx_harvesters").setLevel(log_level)
 
