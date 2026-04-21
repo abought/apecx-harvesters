@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Query schema",
+  "description": "Searchable fields across all harvesters. Domain fields (pdb, pubmed, emdb, biorxiv) are present only on records from that source - use their presence to identify the record type. ",
+  "properties": {
+    "identifier": {
+      "description": "The primary persistent identifier for this record (e.g. the DOI minted for it).",
+      "properties": {
+        "identifier": {
+          "description": "The identifier value, typically a DOI",
+          "type": "string"
+        },
+        "identifierType": {
+          "description": "The identifier scheme, e.g. 'DOI'",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "creators": {
+      "description": "A list of authors",
+      "items": {
+        "description": "An author or contributor.\n\nNot all source APIs provide structured name data, so all name fields are\noptional.  At least one of `name` or the `givenName` / `familyName`\npair should be populated by the harvester.",
+        "properties": {
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "affiliation": {
+            "$ref": "#/$defs/Affiliation"
+          },
+          "nameIdentifiers": {
+            "items": {
+              "$ref": "#/$defs/NameIdentifier"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Authors",
+      "type": "array"
+    },
+    "titles": {
+      "description": "One or more titles for this dataset",
+      "items": {
+        "description": "A title for the dataset.  Absence of `titleType` indicates the main title.",
+        "properties": {
+          "title": {
+            "description": "The title text",
+            "type": "string"
+          },
+          "titleType": {
+            "type": "string",
+            "description": "Controlled vocabulary for title types.  Enumerated as titleType in DataCite Metadata Schema 4.x."
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "publisher": {
+      "properties": {
+        "name": {
+          "description": "What organization produced the dataset",
+          "title": "Organization",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "publicationYear": {
+      "type": "string",
+      "description": "4-digit year"
+    },
+    "resourceType": {
+      "description": "Resource type classification for this record.",
+      "properties": {
+        "resourceTypeGeneral": {
+          "type": "string",
+          "description": "Resource type controlled vocabulary.  Enumerated as resourceTypeGeneral in DataCite Metadata Schema 4.x."
+        },
+        "resourceType": {
+          "type": "string",
+          "description": "Free-text description of the resource type"
+        }
+      },
+      "type": "object"
+    },
+    "contributors": {
+      "items": {
+        "description": "A contributor to the dataset other than the primary creators.\n\nUses the same name-field structure as Creator, plus a required contributorType.",
+        "properties": {
+          "contributorType": {
+            "type": "string",
+            "description": "Controlled vocabulary for contributor roles.  Enumerated as contributorType in DataCite Metadata Schema 4.x."
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "affiliation": {
+            "$ref": "#/$defs/Affiliation"
+          },
+          "nameIdentifiers": {
+            "items": {
+              "$ref": "#/$defs/NameIdentifier"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "dates": {
+      "items": {
+        "description": "A date associated with the dataset, stored as an ISO 8601 date-time string.",
+        "properties": {
+          "date": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateType": {
+            "type": "string",
+            "description": "Controlled vocabulary for date types.  Enumerated as dateType in DataCite Metadata Schema 4.x."
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language of the resource (ISO 639-1 or 639-3), e.g. 'en'"
+    },
+    "alternateIdentifiers": {
+      "description": "Other identifiers for the same resource (e.g. database accession codes)",
+      "items": {
+        "description": "An alternative identifier for the same resource (e.g. a database accession or PMID).",
+        "properties": {
+          "alternateIdentifier": {
+            "description": "An identifier for the same resource using a different scheme",
+            "type": "string"
+          },
+          "alternateIdentifierType": {
+            "description": "The scheme of the alternate identifier, e.g. 'PDB', 'PMID', 'EMDB'",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "descriptions": {
+      "description": "One or more descriptions of this dataset",
+      "items": {
+        "description": "A description of the dataset.",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "descriptionType": {
+            "type": "string",
+            "description": "Controlled vocabulary for description types.  Enumerated as descriptionType in DataCite Metadata Schema 4.x."
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "subjects": {
+      "items": {
+        "description": "A subject, keyword, or classification code describing the dataset.\n\nThis is a simplified subset of the DataCite subject property \u2014 only the\nfree-text `subject` value is captured.  The full spec also supports\n`subjectScheme`, `schemeUri`, and `valueUri` for structured ontology terms,\nbut most sources provide plain keywords rather than formal ontology entries.\nHarvesters should map keyword lists (e.g. PDB `struct_keywords`) to this field,\n    or harmonize records using unspecified custom logic.",
+        "properties": {
+          "subject": {
+            "description": "Keywords",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relatedIdentifiers": {
+      "description": "PID-to-PID relationships. Use when the related resource is fully identified by its persistent identifier and no further description is needed. For citation-style references where title, year, or other metadata should be preserved, use relatedItems instead.",
+      "items": {
+        "description": "A related resource and its relationship to this dataset.\n\nUse when the relationship is expressible as PID-to-PID and no further\ndescription of the related resource is needed (e.g. linking to a related\ndataset, software repo, or preprint).  When you need to preserve\nbibliographic metadata \u2014 title, year, pages \u2014 use ``RelatedItem`` instead.",
+        "properties": {
+          "relatedIdentifier": {
+            "description": "e.g. a DOI or URL",
+            "type": "string"
+          },
+          "relatedIdentifierType": {
+            "type": "string",
+            "description": "Controlled vocabulary for identifier types.  Enumerated as relatedIdentifierType in DataCite Metadata Schema 4.x."
+          },
+          "relationType": {
+            "type": "string",
+            "description": "Controlled vocabulary for relation types.  Enumerated as relationType in DataCite Metadata Schema 4.x."
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "biorxiv": {
+      "description": "Domain-specific metadata for a bioRxiv or medRxiv preprint.",
+      "properties": {
+        "server": {
+          "description": "Preprint server: 'bioRxiv' or 'medRxiv'",
+          "type": "string"
+        },
+        "publication_type": {
+          "description": "Publication status, e.g. 'PUBLISHAHEADOFPRINT'",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "emdb": {
+      "description": "Domain-specific metadata for an EMDB structure entry.",
+      "properties": {
+        "emdb_id": {
+          "description": "EMDB accession code, e.g. 'EMD-74041'",
+          "type": "string"
+        },
+        "method": {
+          "description": "Structure determination method, e.g. 'singleParticle', 'subtomogramAveraging', 'helical', 'tomography'",
+          "title": "Experimental Method",
+          "type": "string"
+        },
+        "resolution_angstrom": {
+          "type": "number",
+          "description": "Map resolution in \u00e5ngstr\u00f6ms as reported by the authors"
+        },
+        "resolution_method": {
+          "type": "string",
+          "description": "Method used to estimate resolution, e.g. 'FSC 0.143 CUT-OFF'"
+        }
+      },
+      "type": "object"
+    },
+    "pdb": {
+      "description": "Domain-specific metadata for a PDB structure entry.",
+      "properties": {
+        "pdb_id": {
+          "description": "RCSB PDB accession code, e.g. '1OMW'",
+          "type": "string"
+        },
+        "method": {
+          "type": "string",
+          "description": "Experimental technique used to determine the structure, e.g. 'X-RAY DIFFRACTION'"
+        },
+        "resolution_angstrom": {
+          "type": "number",
+          "description": "Diffraction resolution in \u00e5ngstr\u00f6ms; absent for NMR and other non-diffraction methods"
+        },
+        "polymer_entities": {
+          "description": "Source organisms per polymer entity, preserving the entity-organism association. # TODO: this is a more complex model and domain experts should evaluate full representation",
+          "items": {
+            "description": "A polymer entity within a PDB structure, with its source organism.",
+            "properties": {
+              "entity_id": {
+                "description": "RCSB entity identifier, e.g. '6M0J_1'",
+                "type": "string"
+              },
+              "scientific_name": {
+                "type": "string",
+                "description": "Source organism scientific name from rcsb_entity_source_organism. None when the organism is not recorded (e.g. synthetic constructs)."
+              },
+              "polymer_type": {
+                "type": "string",
+                "description": "Broad polymer class from entity_poly.rcsb_entity_polymer_type, e.g. 'Protein', 'DNA', 'RNA', 'NA-hybrid', 'Other'."
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "struct_keywords": {
+          "description": "Raw ``_struct_keywords`` fields from the PDB API, preserved for harmonization.",
+          "properties": {
+            "pdbx_keywords": {
+              "type": "string",
+              "description": "RCSB-assigned classification term (controlled vocabulary), e.g. 'TRANSFERASE'."
+            },
+            "text": {
+              "type": "string",
+              "description": "Comma-separated keywords supplied by the depositor at submission."
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "pubmed": {
+      "description": "Bibliographic metadata specific to a PubMed article record.",
+      "properties": {
+        "publication_types": {
+          "description": "NLM publication type labels, e.g. ['Journal Article', 'Review']",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "Affiliation": {
+      "properties": {
+        "name": {
+          "description": "Institution / employer for this author",
+          "title": "Affiliation",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "NameIdentifier": {
+      "description": "A persistent identifier for a creator, e.g. an ORCID or ISNI.",
+      "properties": {
+        "nameIdentifier": {
+          "description": "The identifier value, e.g. '0000-0002-9072-1017'",
+          "type": "string"
+        },
+        "nameIdentifierScheme": {
+          "description": "The identifier scheme, e.g. 'ORCID', 'ISNI', 'ROR'",
+          "type": "string"
+        },
+        "schemeUri": {
+          "type": "string",
+          "description": "The URI of the identifier scheme, e.g. 'https://orcid.org'"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

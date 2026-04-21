@@ -1,5 +1,6 @@
 .venv/
 **/*.egg-info/
+.claude/
 
 .cache/
 output/
