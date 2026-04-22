@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import hashlib
 import logging
 import re
 from abc import ABC, abstractmethod
@@ -75,7 +76,8 @@ class BaseHarvester(ABC, Generic[T]):
                 f"{type(self).__name__} must either set _CACHE_DIR or override _cache_path"
             )
         safe = re.sub(r'[/\\:*?"<>|\s]', "_", id_)
-        return self._cache_root / self._CACHE_DIR / f"{safe}.json.gz"
+        prefix = hashlib.md5(safe.encode()).hexdigest()[:2]
+        return self._cache_root / self._CACHE_DIR / prefix / f"{safe}.json.gz"
 
     @abstractmethod
     async def _parse_item(self, content: str) -> T:
@@ -235,7 +237,13 @@ class BaseHarvester(ABC, Generic[T]):
         if not cache_dir.exists():
             return
         cutoff = since.timestamp() if since is not None else None
-        for path in sorted(cache_dir.glob("*.json.gz")):
+        paths = (
+            path
+            for subdir in sorted(cache_dir.iterdir())
+            if subdir.is_dir()
+            for path in sorted(subdir.glob("*.json.gz"))
+        )
+        for path in paths:
             if cutoff is not None and path.stat().st_mtime <= cutoff:
                 continue
             try:
