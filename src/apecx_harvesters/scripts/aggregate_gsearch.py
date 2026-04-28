@@ -32,6 +32,7 @@ from typing import Any
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
 from apecx_harvesters.loaders.base import BaseHarvester
+from apecx_harvesters.loaders.emdb import EMDBHarvester
 from apecx_harvesters.loaders.pdb import PDBHarvester
 from apecx_harvesters.loaders.pubmed import PubMedHarvester
 from apecx_harvesters.pipeline import to_gmetalist
@@ -80,6 +81,7 @@ async def _run(output_root: Path, cache_root: Path) -> None:
     harvesters: list[tuple[BaseHarvester[Any], str]] = [
         (PubMedHarvester(cache_root=cache_root), "pubmed"),
         (PDBHarvester(cache_root=cache_root), "pdb"),
+        (EMDBHarvester(cache_root=cache_root), "emdb"),
     ]
 
     await asyncio.gather(

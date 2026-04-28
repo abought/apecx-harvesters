@@ -13,8 +13,10 @@ from apecx_harvesters.loaders.base.retrieve import RetrievalResult
 
 logger = logging.getLogger(__name__)
 
-# Globus Search ingest limits.
-_GSEARCH_MAX_BYTES = 10_000_000
+# Globus Search ingest limits. https://docs.globus.org/api/search/limits/
+_GSEARCH_MAX_BYTES = 10_000_000          # GMetaList chunk ceiling
+_GSEARCH_MAX_ENTRY_BYTES = 10_000_000    # per GMetaEntry
+_GSEARCH_MAX_FIELD_BYTES = 32_000        # per field value
 # Note: calculation must use stdlib json; faster libraries like orjson yield diff payload sizes. Really.
 _GSEARCH_WRAPPER_OVERHEAD = len(json.dumps({"ingest_type": "GMetaList", "ingest_data": {"gmeta": []}}).encode())
 
@@ -47,17 +49,44 @@ def report(name: str = "") -> Callable[[AsyncIterator[RetrievalResult[Any]]], Aw
     return _sink
 
 
+def _truncate_fields(obj: Any, subject: str, path: str = "") -> Any:
+    """Recursively truncate string leaves exceeding the Globus 32 KB field limit."""
+    if isinstance(obj, str):
+        encoded = obj.encode()
+        if len(encoded) > _GSEARCH_MAX_FIELD_BYTES:
+            logger.warning(
+                "%s field %r: %d bytes truncated to %d (Globus 32 KB field limit)",
+                subject, path, len(encoded), _GSEARCH_MAX_FIELD_BYTES,
+            )
+            return encoded[:_GSEARCH_MAX_FIELD_BYTES].decode("utf-8", errors="ignore")
+        return obj
+    if isinstance(obj, dict):
+        return {k: _truncate_fields(v, subject, f"{path}.{k}" if path else k) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_truncate_fields(v, subject, f"{path}[{i}]") for i, v in enumerate(obj)]
+    return obj
+
+
 def _to_gmetaentry(
     record: DataCite,
     *,
     visible_to: list[str] | None = None,
 ) -> dict[str, Any]:
     """Convert a harvested record to a Globus Search GMetaEntry document."""
-    return {
-        "subject": record.canonical_uri,
+    subject = record.canonical_uri
+    content = _truncate_fields(record.to_dict(), subject)
+    entry: dict[str, Any] = {
+        "subject": subject,
         "visible_to": visible_to or ["public"],
-        "content": record.to_dict(),
+        "content": content,
     }
+    entry_bytes = len(json.dumps(entry).encode())
+    if entry_bytes > _GSEARCH_MAX_ENTRY_BYTES:
+        logger.warning(
+            "%s: entry is %d bytes after field truncation, exceeds 10 MB GMetaEntry limit",
+            subject, entry_bytes,
+        )
+    return entry
 
 
 async def to_gmetalist(

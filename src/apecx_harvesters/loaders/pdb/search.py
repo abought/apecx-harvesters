@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from typing import Any
 
 import httpx
 import orjson
+
+logger = logging.getLogger(__name__)
 
 from ..base.http_retry import http_request as _http_request
 from ..base.parser import parse_author_name as _parse_author_name
@@ -243,6 +246,9 @@ async def search(
                 headers={"Content-Type": "application/json"},
             )
             response.raise_for_status()
+            if not response.content:
+                logger.warning("Stopping search: PDB search returned empty body at offset %d (query: %s)", start, query)
+                break
             data = orjson.loads(response.content)
 
             results = data.get("result_set") or []

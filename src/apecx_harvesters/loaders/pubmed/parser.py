@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import calendar
+import datetime
+import logging
 import re
 import xml.etree.ElementTree as ET
 from itertools import chain
+
+logger = logging.getLogger(__name__)
 
 from ..base import (
     Affiliation,
@@ -36,6 +41,11 @@ _MONTH_ABBR: dict[str, int] = {
     "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
 }
 
+# PubMed sometimes stores the full concatenated affiliation list (all authors,
+# all institutions) under each author element. At that length the string cannot
+# be attributed to a single author, so we drop it rather than propagate noise.
+_MAX_AFFILIATION_LEN = 1024
+
 
 def _parse_article(article_elem: ET.Element) -> PubMedContainer:
     """Parse one ``<PubmedArticle>`` element into a ``PubMedContainer``."""
@@ -65,7 +75,7 @@ def _parse_article(article_elem: ET.Element) -> PubMedContainer:
 
     journal_ri = _build_journal_container(article)
     return PubMedContainer.new(
-        creators=_parse_creators(article.findall("AuthorList/Author")),
+        creators=_parse_creators(article.findall("AuthorList/Author"), pmid=pmid),
         title=_parse_title(article),
         description=_parse_abstract(article),
         publisher=Publisher(name=article.findtext("Journal/Title") or ""),
@@ -148,7 +158,7 @@ def _parse_book_article(elem: ET.Element) -> PubMedContainer:
     pub_types = [pt.text for pt in book_doc.findall("PublicationType") if pt.text]
 
     return PubMedContainer.new(
-        creators=_parse_creators(chapter_authors),
+        creators=_parse_creators(chapter_authors, pmid=pmid),
         title=title,
         description=_parse_abstract(book_doc),
         publisher=Publisher(name=publisher_name),
@@ -165,7 +175,7 @@ def _parse_book_article(elem: ET.Element) -> PubMedContainer:
     )
 
 
-def _parse_creators(author_elems: list[ET.Element]) -> list[Creator]:
+def _parse_creators(author_elems: list[ET.Element], *, pmid: str) -> list[Creator]:
     """
     Build `Creator` objects from a list of ``<Author>`` elements.
 
@@ -184,7 +194,15 @@ def _parse_creators(author_elems: list[ET.Element]) -> list[Creator]:
         affiliation = None
         aff_elem = author.find("AffiliationInfo/Affiliation")
         if aff_elem is not None and aff_elem.text:
-            affiliation = Affiliation(name=aff_elem.text.strip())
+            aff_text = aff_elem.text.strip()
+            if len(aff_text) <= _MAX_AFFILIATION_LEN:
+                affiliation = Affiliation(name=aff_text)
+            else:
+                logger.warning(
+                    "pubmed:%s: dropping affiliation for %r: %d chars exceeds %d "
+                    "(likely a concatenated multi-author list)",
+                    pmid, compose_creator_name(family, given), len(aff_text), _MAX_AFFILIATION_LEN,
+                )
 
         name_identifiers = []
         for ident in author.findall("Identifier"):
@@ -417,13 +435,24 @@ def _pubmed_date_to_iso(date_elem: ET.Element) -> str | None:
             except ValueError:
                 pass
 
-        return f"{year:04d}-{month:02d}-{day:02d}T00:00:00Z"
+        try:
+            last_day = calendar.monthrange(year, month)[1]
+        except ValueError:
+            return None
+        if day > last_day:
+            logger.warning(
+                "pubmed: clamping out-of-range date %04d-%02d-%02d to day %02d",
+                year, month, day, last_day,
+            )
+            day = last_day
+
+        return datetime.datetime(year, month, day, tzinfo=datetime.timezone.utc).isoformat()
 
     # Fall back to MedlineDate — extract four-digit year only.
     medline_date = date_elem.findtext("MedlineDate")
     if medline_date:
         m = re.search(r"\b(\d{4})\b", medline_date)
         if m:
-            return f"{m.group(1)}-01-01T00:00:00Z"
+            return datetime.datetime(int(m.group(1)), 1, 1, tzinfo=datetime.timezone.utc).isoformat()
 
     return None

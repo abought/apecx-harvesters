@@ -33,6 +33,8 @@ from apecx_harvesters.loaders.pubmed.constants import rate_limit_with_key as _PU
 from apecx_harvesters.loaders.pubmed.search import pubmed_author_term, search as pubmed_search
 from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 
+logger = logging.getLogger(__name__)
+
 
 async def _run(
     author: str | None,
@@ -86,6 +88,12 @@ def main() -> None:
         help="Author name. Accepted formats: 'Jane Smith', 'Smith, Jane', 'J. Smith'.",
     )
     parser.add_argument(
+        "--file",
+        default=None,
+        metavar="FILE",
+        help="Text file with one author name per line. Mutually exclusive with --author/--orcid.",
+    )
+    parser.add_argument(
         "--orcid",
         default=None,
         metavar="ORCID",
@@ -118,14 +126,25 @@ def main() -> None:
         help="Enable debug logging (rate limiter timing, HTTP details).",
     )
     args = parser.parse_args()
-    if args.author is None and args.orcid is None:
-        parser.error("At least one of --author or --orcid is required.")
+    using_file = args.file is not None
+    using_single = args.author is not None or args.orcid is not None
+    if using_file and using_single:
+        parser.error("--file is mutually exclusive with --author/--orcid.")
+    if not using_file and not using_single:
+        parser.error("At least one of --author, --orcid, or --file is required.")
 
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
     logging.getLogger("apecx_harvesters").setLevel(log_level)
 
-    asyncio.run(_run(args.author, args.orcid, args.institution, args.api_key))
+    if using_file:
+        with open(args.file) as f:
+            authors = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+        for author in authors:
+            logger.info("Searching: %s", author)
+            asyncio.run(_run(author, None, None, args.api_key))
+    else:
+        asyncio.run(_run(args.author, args.orcid, args.institution, args.api_key))
 
 
 if __name__ == "__main__":

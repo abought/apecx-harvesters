@@ -116,6 +116,56 @@ class TestCreatorsNatComm:
 
 
 # ---------------------------------------------------------------------------
+# Affiliation — mega-concatenated list dropped
+# ---------------------------------------------------------------------------
+
+_MINIMAL_ARTICLE_XML = """\
+<PubmedArticleSet>
+<PubmedArticle>
+  <MedlineCitation Status="MEDLINE" Owner="NLM">
+    <PMID Version="1">99999999</PMID>
+    <Article PubModel="Print">
+      <Journal>
+        <JournalIssue CitedMedium="Internet">
+          <PubDate><Year>2024</Year></PubDate>
+        </JournalIssue>
+        <Title>Test Journal</Title>
+      </Journal>
+      <ArticleTitle>Test title</ArticleTitle>
+      <AuthorList CompleteYN="Y">
+        <Author ValidYN="Y">
+          <LastName>Smith</LastName>
+          <ForeName>John</ForeName>
+          <AffiliationInfo>
+            <Affiliation>{affiliation}</Affiliation>
+          </AffiliationInfo>
+        </Author>
+      </AuthorList>
+      <Language>eng</Language>
+    </Article>
+  </MedlineCitation>
+  <PubmedData/>
+</PubmedArticle>
+</PubmedArticleSet>"""
+
+
+class TestAffiliationLength:
+    def test_short_affiliation_is_captured(self):
+        xml = _MINIMAL_ARTICLE_XML.format(affiliation="Department of X, University Y, City.")
+        record = _parse(xml)
+        assert record.creators[0].affiliation is not None
+        assert "University Y" in record.creators[0].affiliation.name
+
+    def test_mega_affiliation_is_dropped(self, caplog):
+        mega = ("Inst A, Univ B; " * 100)  # ~1600 chars, clearly a concatenated list
+        xml = _MINIMAL_ARTICLE_XML.format(affiliation=mega)
+        with caplog.at_level("WARNING"):
+            record = _parse(xml)
+        assert record.creators[0].affiliation is None
+        assert any("99999999" in r.message and "concatenated" in r.message for r in caplog.records)
+
+
+# ---------------------------------------------------------------------------
 # Abstract — single paragraph
 # ---------------------------------------------------------------------------
 
@@ -201,24 +251,24 @@ class TestIdentifiers:
 class TestDatesNatComm:
     def test_submitted_from_received(self, natcomm):
         submitted = next(d for d in natcomm.dates if d.dateType == DateType.Submitted)
-        assert submitted.date == "2018-12-03T00:00:00Z"
+        assert submitted.date == "2018-12-03T00:00:00+00:00"
 
     def test_accepted_date(self, natcomm):
         accepted = next(d for d in natcomm.dates if d.dateType == DateType.Accepted)
-        assert accepted.date == "2021-01-17T00:00:00Z"
+        assert accepted.date == "2021-01-17T00:00:00+00:00"
 
     def test_created_from_article_date(self, natcomm):
         created = next(d for d in natcomm.dates if d.dateType == DateType.Created)
-        assert created.date == "2021-02-16T00:00:00Z"
+        assert created.date == "2021-02-16T00:00:00+00:00"
 
     def test_orthodontics_month_abbreviation(self, orthodontics):
         # PubDate has <Month>Jun</Month> with no Day — should default to day 1
         created = next(d for d in orthodontics.dates if d.dateType == DateType.Created)
-        assert created.date == "2020-05-27T00:00:00Z"  # ArticleDate wins over JournalIssue/PubDate
+        assert created.date == "2020-05-27T00:00:00+00:00"  # ArticleDate wins over JournalIssue/PubDate
 
     def test_orthodontics_accepted_date(self, orthodontics):
         accepted = next(d for d in orthodontics.dates if d.dateType == DateType.Accepted)
-        assert accepted.date == "2020-04-27T00:00:00Z"
+        assert accepted.date == "2020-04-27T00:00:00+00:00"
 
     def test_no_revised_date_when_absent(self, natcomm):
         assert not any(d.dateType == DateType.Updated for d in natcomm.dates)
