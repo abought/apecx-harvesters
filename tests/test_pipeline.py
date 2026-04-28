@@ -16,6 +16,7 @@ from apecx_harvesters.pipeline import (
     run_parallel,
     to_gmetalist,
 )
+from apecx_harvesters.pipeline.sinks import _GSEARCH_MAX_ENTRY_BYTES, _GSEARCH_MAX_FIELD_BYTES, _to_gmetaentry
 from apecx_harvesters.pipeline.sources import csv_ids
 
 
@@ -253,6 +254,65 @@ class TestToGmetalist:
         for chunk in chunks:
             size = len(json.dumps(chunk).encode())
             assert size <= max_bytes
+
+
+# ---------------------------------------------------------------------------
+# _to_gmetaentry() — field and entry size limits
+# ---------------------------------------------------------------------------
+
+class TestGmetaentryLimits:
+    def _record_with_description(self, text: str, identifier: str = "test:1") -> DataCite:
+        return DataCite.new(
+            title="Test",
+            description=text,
+            creators=[],
+            publisher=Publisher(name="Test"),
+            identifier=Identifier(identifier=identifier, identifierType="URL"),
+        )
+
+    def test_short_description_passes_through_unchanged(self):
+        rec = self._record_with_description("Short abstract.")
+        entry = _to_gmetaentry(rec)
+        desc = entry["content"]["descriptions"][0]["description"]
+        assert desc == "Short abstract."
+
+    def test_oversized_string_field_is_truncated(self):
+        long_text = "x" * (_GSEARCH_MAX_FIELD_BYTES + 500)
+        rec = self._record_with_description(long_text)
+        entry = _to_gmetaentry(rec)
+        desc = entry["content"]["descriptions"][0]["description"]
+        assert len(desc.encode()) <= _GSEARCH_MAX_FIELD_BYTES
+        assert len(desc.encode()) < len(long_text.encode())
+
+    def test_oversized_field_emits_warning(self, caplog):
+        long_text = "x" * (_GSEARCH_MAX_FIELD_BYTES + 500)
+        rec = self._record_with_description(long_text, identifier="warn:1")
+        with caplog.at_level("WARNING"):
+            _to_gmetaentry(rec)
+        assert any(
+            "warn:1" in r.message and "descriptions[0].description" in r.message
+            for r in caplog.records
+        )
+
+    def test_oversized_entry_emits_warning(self, caplog):
+        # Build an entry that exceeds 10 MB even after per-field truncation by
+        # using many fields each just under 32 KB.
+        from apecx_harvesters.loaders.base.model import Description, DescriptionType
+        field_text = "y" * (_GSEARCH_MAX_FIELD_BYTES - 1)
+        n_fields = (_GSEARCH_MAX_ENTRY_BYTES // _GSEARCH_MAX_FIELD_BYTES) + 5
+        rec = DataCite.new(
+            title="Big",
+            creators=[],
+            publisher=Publisher(name="Test"),
+            identifier=Identifier(identifier="big:1", identifierType="URL"),
+            descriptions=[
+                Description(description=field_text, descriptionType=DescriptionType.Abstract)
+                for _ in range(n_fields)
+            ],
+        )
+        with caplog.at_level("WARNING"):
+            _to_gmetaentry(rec)
+        assert any("big:1" in r.message and "10 MB" in r.message for r in caplog.records)
 
 
 # ---------------------------------------------------------------------------
