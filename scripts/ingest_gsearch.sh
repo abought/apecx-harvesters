@@ -18,7 +18,7 @@ echo "Ingesting $FILE_COUNT files from $FOLDER to index $INDEX_ID"
 while IFS= read -r FILE; do
     echo "  -> $FILE"
     gzip -dc "$FILE" | globus search ingest "$INDEX_ID" -
-    sleep 1
+    sleep 7
 done < <(find "$FOLDER" -name "*.json.gz" -type f | sort)
 
 echo ""

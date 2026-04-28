@@ -33,6 +33,8 @@ from apecx_harvesters.loaders.pubmed.constants import rate_limit_with_key as _PU
 from apecx_harvesters.loaders.pubmed.search import search as pubmed_search
 from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 
+logger = logging.getLogger(__name__)
+
 
 async def _run(
     term: str,
@@ -85,8 +87,14 @@ def main() -> None:
     )
     parser.add_argument(
         "--term",
-        required=True,
+        default=None,
         help="Search term or biological entity name (e.g. 'SARS-CoV-2', 'influenza hemagglutinin').",
+    )
+    parser.add_argument(
+        "--file",
+        default=None,
+        metavar="FILE",
+        help="Text file with one search term per line. Mutually exclusive with --term.",
     )
     parser.add_argument(
         "--begin-year",
@@ -116,15 +124,26 @@ def main() -> None:
         help="Enable debug logging (rate limiter timing, HTTP details).",
     )
     args = parser.parse_args()
+    if (args.term is None) == (args.file is None):
+        parser.error("Exactly one of --term or --file is required.")
 
     begin, end = args.begin_year, args.end_year
     if begin is not None and end is not None and begin > end:
         begin, end = end, begin
 
-    logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
     logging.getLogger("apecx_harvesters").setLevel(log_level)
-    asyncio.run(_run(args.term, begin, end, args.api_key))
+
+    if args.term:
+        terms = [args.term]
+    else:
+        with open(args.file) as f:
+            terms = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+
+    for term in terms:
+        logger.info("Searching: %s", term)
+        asyncio.run(_run(term, begin, end, args.api_key))
 
 
 if __name__ == "__main__":
