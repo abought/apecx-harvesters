@@ -10,12 +10,12 @@ from typing import Any
 import httpx
 import orjson
 
-logger = logging.getLogger(__name__)
-
 from ..base.http_retry import http_request as _http_request
 from ..base.parser import parse_author_name as _parse_author_name
 from ..base.rate_limit import RateLimiter
 from .constants import rate_limit as _default_rate_limit
+
+logger = logging.getLogger(__name__)
 
 _SEARCH_URL = "https://search.rcsb.org/rcsbsearch/v2/query"
 _DEFAULT_PAGE_SIZE = 250

@@ -9,8 +9,6 @@ import re
 import xml.etree.ElementTree as ET
 from itertools import chain
 
-logger = logging.getLogger(__name__)
-
 from ..base import (
     Affiliation,
     AlternateIdentifier,
@@ -35,6 +33,8 @@ from ..base.parser import (
     split_page,
 )
 from .model import PubMedContainer, PubMedFields
+
+logger = logging.getLogger(__name__)
 
 _MONTH_ABBR: dict[str, int] = {
     "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
