@@ -21,18 +21,20 @@ Each file is a gzip-compressed Globus Search GMetaList ingest document (≤ 10 M
 
 from __future__ import annotations
 
+import sys
 import argparse
 import asyncio
 import datetime
 import gzip
 import json
 import logging
-from pathlib import Path
+import pathlib
 from typing import Any
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
 from apecx_harvesters.loaders.base import BaseHarvester
 from apecx_harvesters.loaders.emdb import EMDBHarvester
+from apecx_harvesters.loaders.iedb import IEDBHarvester
 from apecx_harvesters.loaders.pdb import PDBHarvester
 from apecx_harvesters.loaders.pubmed import PubMedHarvester
 from apecx_harvesters.pipeline import to_gmetalist
@@ -42,7 +44,7 @@ logger = logging.getLogger(__name__)
 _TIMESTAMP_FMT = "%Y%m%dT%H%M%S"
 
 
-def _last_aggregation(output_root: Path) -> datetime.datetime | None:
+def _last_aggregation(output_root: pathlib.Path) -> datetime.datetime | None:
     """Return the datetime of the most recent aggregation run under output_root, or None."""
     if not output_root.exists():
         return None
@@ -57,10 +59,10 @@ def _last_aggregation(output_root: Path) -> datetime.datetime | None:
 
 
 async def _aggregate(
-    harvester: BaseHarvester[Any],
-    output_dir: Path,
-    source: str,
-    since: datetime.datetime | None,
+        harvester: BaseHarvester[Any],
+        output_dir: pathlib.Path,
+        source: str,
+        since: datetime.datetime | None,
 ) -> None:
     """Read new/updated records from cache and write Globus Search ingest chunks."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -74,7 +76,7 @@ async def _aggregate(
         logger.info("[%s] wrote %s (%s)", source, path, label)
 
 
-async def _run(output_root: Path, cache_root: Path) -> None:
+async def _run(output_root: pathlib.Path, cache_root: pathlib.Path) -> None:
     since = _last_aggregation(output_root)
     run_dir = output_root / datetime.datetime.now().strftime(_TIMESTAMP_FMT)
 
@@ -82,6 +84,7 @@ async def _run(output_root: Path, cache_root: Path) -> None:
         (PubMedHarvester(cache_root=cache_root), "pubmed"),
         (PDBHarvester(cache_root=cache_root), "pdb"),
         (EMDBHarvester(cache_root=cache_root), "emdb"),
+        (IEDBHarvester(cache_root=cache_root), "iedb"),
     ]
 
     await asyncio.gather(
@@ -106,10 +109,21 @@ def main() -> None:
         help="Cache root directory (default: %(default)s).",
     )
     args = parser.parse_args()
+    cache_root = pathlib.Path(args.cache_root)
+    output_directory = pathlib.Path(args.output)
+    if not cache_root.exists():
+        logger.error(f"Cache root does not exist: {cache_root}")
+        sys.exit(1)
+    else:
+        try:
+            output_directory.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            logger.error(f"Output folder cannot be created: {e}")
+            sys.exit(1)
 
     logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
     logging.getLogger("apecx_harvesters").setLevel(logging.INFO)
-    asyncio.run(_run(Path(args.output), Path(args.cache_root)))
+    asyncio.run(_run(output_directory, cache_root))
 
 
 if __name__ == "__main__":

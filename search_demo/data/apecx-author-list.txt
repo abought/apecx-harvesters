@@ -1,0 +1,116 @@
+Jimmy D Gollihar		Houston Methodist Research Institute
+Jimmy D Gollihar		Houston Methodist Hospital
+Jimmy D Gollihar		University of Texas at Austin
+Jason S McLellan		University of Texas at Austin
+Jason S McLellan		National Institute of Allergy and Infectious Diseases
+Jason S McLellan		National Institutes of Health
+Adam Klivans		University of Texas at Austin
+Alexander J Titus		University of Southern California
+Alexander J Titus		Colossal Biosciences
+Doug Lauffenburger		Massachusetts Institute of Technology
+Chris A Benedict		La Jolla Institute for Immunology
+Shane Crotty		La Jolla Institute for Immunology
+Alex Sette		La Jolla Institute for Immunology
+Alex Sette		University of California at San Diego
+Alex Sette		Cytel
+Alex Sette		Epimmune Incorporated
+Jeremy P Kamil		Louisiana State University
+Jeremy P Kamil		University of Pittsburgh
+Margaret E Ackerman		Dartmouth College
+Benjamin E Gewurz		Brigham and Womens Hospital/Harvard University
+Benjamin E Gewurz		Brigham and Women's Hospital
+Benjamin E Gewurz		Harvard Medical School
+Laurie T Krug		National Cancer Institute
+Laurie T Krug		Center for Cancer Research
+Sallie R Permar		Weill Cornell Medical School
+Sallie R Permar		Weill Cornell Medicine
+Sallie R Permar		New York Presbyterian
+Guido Silvestri		Emory University
+Guido Silvestri		Emory University School of Medicine
+Guido Silvestri		Scripps Research Institute
+Sudhir Pai Kasturi		Emory University
+Sudhir Pai Kasturi		Emory Vaccine Center
+Sudhir Pai Kasturi		Yerkes National Primate Research Center
+Koen K A Van Rompay		University of California
+John P Cooke		Houston Methodist Hospital
+John P Cooke		Houston Methodist Research Institute
+Annette B Gadegbeku		Drexel University College of Medicine
+Annette B Gadegbeku		Drexel University
+Annette B Gadegbeku		Hahnemann Hospital
+Fred Morstatter		University of Southern California
+Nadine G Rouphael		Hope Clinic
+Nadine G Rouphael		Emory University
+David Baker		University of Washington
+David Baker		Seoul National University
+Frank DiMaio		University of Washington
+David Veesler		University of Washington
+Kelly K Lee		University of Washington
+Matthew McCallum		University of Washington
+Jesse D Bloom		Fred Hutchinson Cancer Center
+Jesse D Bloom		Fred Hutchinson Cancer Research Center
+Jesse D Bloom		University of Washington
+Jesse D Bloom		Howard Hughes Medical Institute
+Jennifer L Lund		Fred Hutchinson Cancer Center
+Jennifer L Lund		Fred Hutchinson Cancer Research Center
+Jennifer L Lund		University of North Carolina
+Jennifer L Lund		University of North Carolina at Chapel Hill
+Andrew T McGuire		Fred Hutchinson Cancer Center
+Andrew T McGuire		Fred Hutchinson Cancer Research Center
+Andrew T McGuire		University of Washington
+David Leib		Dartmouth College
+David Leib		Guarini School of Graduate and Advanced Studies at Dartmouth
+George Georgiou		University of Texas at Austin
+Jason J Lavinder		University of Texas at Austin
+Michael S Diamond		Washington University School of Medicine
+Leslie Goo		Vaccine Company, Inc
+Leslie Goo		Fred Hutchinson Cancer Center
+Barney S Graham		Morehouse School of Medicine
+Barney S Graham		National Institutes of Health
+Payton A Weidenbacher		Vaccine Company, Inc
+Payton A Weidenbacher		Stanford University
+Vida Ahyong		Vaccine Company, Inc
+Vida Ahyong		Chan Zuckerberg Biohub
+Bryan D Bryson		Massachusetts Institute of Technology
+John Duchi		Stanford University
+Hani Goodarzi		University of California
+Brian Hie		Stanford University
+Brian Hie		Meta AI
+Brian Hie		Facebook
+Ellen D Zhong		Princeton University
+Theodore C Pierson		National Institute of Allergy and Infectious Diseases
+Theodore C Pierson		National Institutes of Health
+Lindsey Ross		Cedars-Sinai Medical Center
+Michael W Schwartz		Vaccine Company, Inc
+Michael W Schwartz		University of Washington
+Michael W Schwartz		National Institutes of Health
+Richard M Schwartz		Vaccine Company, Inc
+Richard M Schwartz		National Institutes of Health
+Sandra Sitar		Vaccine Company, Inc
+Sandra Sitar		National Institutes of Health
+Daniel J Stieh		Vaccine Company, Inc
+Daniel J Stieh		Leiden
+Cameron E Webb		University of Virginia School of Medicine
+Cameron E Webb		Vaccine Company, Inc
+Cameron E Webb		University of Sydney
+Cameron E Webb		Westmead
+C Buddy Creech		Vanderbilt University
+James E Crowe Jr		Vanderbilt University
+Michael S Diamond		Washington University
+Michael S Diamond		Washington University School of Medicine
+Gaurav D Gaiha		Ragon Institute of Mass General
+Gaurav D Gaiha		Massachusetts Institute of Technology
+Gaurav D Gaiha		Harvard
+Gaurav D Gaiha		Massachusetts General Hospital
+Darrell J Irvine		Massachusetts Institute of Technology
+Darrell J Irvine		Scripps Research Institute
+Darrell J Irvine		Howard Hughes Medical Institute
+William B Klimstra		University of Pittsburgh
+Kevin Schey		Vanderbilt University
+Torben Schiffner		Scripps Research Institute
+Mark K Slifka		OHSU Oregon Health and Science University
+Mark K Slifka		Oregon Health and Science University
+Mark K Slifka		Oregon Health & Science University
+Andrew B Ward		Scripps Research Institute
+Daniela Weiskopf		La Jolla Institute for Immunology
+Daniela Weiskopf		La Jolla Institute for Allergy and Immunology
+Ian A Wilson		Scripps Research Institute

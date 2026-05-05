@@ -1,70 +1,231 @@
-human immunodeficiency virus
 adenovirus
-influenza virus
-measles virus
-mumps virus
-rubella virus
-rabies virus
-poliovirus
-norovirus
-rotavirus
-rhinovirus
+african swine fever virus
+aichi virus
+alkhurma hemorrhagic fever virus
+andes virus
+arbovirus
+aura virus
+avian influenza virus
+avian polyomavirus
+barmah forest virus
+bas-congo virus
+bebaru virus
+bk virus
+bluetongue virus
+borna disease virus 1
+bourbon virus
+bovine herpesvirus 1
+bovine viral diarrhea virus
+bundibugyo ebolavirus
+cabassou virus
+canine distemper virus
+canine parvovirus
+chandipura virus
+chapare virus
+chikungunya virus
+colorado tick fever virus
 coronavirus
-sars-cov
-sars-cov-2
-mers-cov
-human coronavirus 229e
-human coronavirus oc43
-herpesvirus
-herpes simplex virus 1
-herpes simplex virus 2
-varicella-zoster virus
-epstein-barr virus
+cowpox virus
+coxsackievirus
+coxsackievirus a
+coxsackievirus b
+crimean-congo hemorrhagic fever virus
 cytomegalovirus
-human herpesvirus 6
-human herpesvirus 7
-hepatitis virus
+dengue virus
+eastern equine encephalitis virus
+ebola virus
+echovirus
+eilat virus
+enterovirus 71
+enterovirus a71
+epstein-barr virus
+everglades virus
+feline immunodeficiency virus
+feline leukemia virus
+fort morgan virus
+gb virus c
+getah virus
+guanarito virus
+hantaan virus
+heartland virus
+hemorrhagic fever virus
+hendra virus
 hepatitis a virus
 hepatitis b virus
 hepatitis c virus
 hepatitis d virus
 hepatitis e virus
-arbovirus
-dengue virus
-zika virus
-chikungunya virus
-yellow fever virus
-west nile virus
-japanese encephalitis virus
-rift valley fever virus
-ross river virus
-mayaro virus
-sindbis virus
-hemorrhagic fever virus
-ebola virus
-marburg virus
-lassa virus
-crimean-congo hemorrhagic fever virus
-poxvirus
-variola virus
-monkeypox virus
-cowpox virus
-vaccinia virus
-papilloma and polyoma viruses
-human papillomavirus
-avian polyomavirus
-respiratory syncytial virus
+hepatitis virus
+herpes simplex virus 1
+herpes simplex virus 2
+herpesvirus
+highlands j virus
+human adenovirus
+human adenovirus 14
+human adenovirus 41
+human adenovirus 55
+human adenovirus 7
+human astrovirus
+human astrovirus mlb1
+human astrovirus va1
+human bocavirus
+human bocavirus 2
+human bocavirus 3
+human bocavirus 4
+human circovirus 1
+human circovirus 2
+human coronavirus 229e
+human coronavirus hku1
+human coronavirus nl63
+human coronavirus oc43
+human coronavirus-like hku2-related virus
+human cosavirus
+human cyclovirus
+human deltavirus
+human enterovirus d68
+human enterovirus d70
+human gyrovirus
+human herpesvirus 6
+human herpesvirus 7
+human immunodeficiency virus
+human immunodeficiency virus 1
+human immunodeficiency virus 2
+human mastadenovirus b
+human mastadenovirus c
+human mastadenovirus e
+human mastadenovirus f
 human metapneumovirus
-parainfluenza virus
-enterovirus 71
-coxsackievirus
-african swine fever virus
-bluetongue virus
-bovine herpesvirus 1
-bovine viral diarrhea virus
-canine parvovirus
-canine distemper virus
-feline leukemia virus
-feline immunodeficiency virus
+human orthorubulavirus 2
+human orthorubulavirus 4
+human orthorubulavirus 5
+human papillomavirus
+human papillomavirus 16
+human papillomavirus 18
+human papillomavirus 31
+human papillomavirus 45
+human papillomavirus 52
+human papillomavirus 58
+human papillomavirus 6
+human parainfluenza virus 1
+human parainfluenza virus 2
+human parainfluenza virus 3
+human parainfluenza virus 4
+human parechovirus 3
+human pegivirus 1
+human pegivirus 2
+human polyomavirus 6
+human polyomavirus 7
+human polyomavirus 9
+human respirovirus 3
+human rotavirus d
+human rotavirus f
+human t-lymphotropic virus 1
+human t-lymphotropic virus 2
+ilheus virus
+influenza a virus
+influenza b virus
+influenza c virus
+influenza d virus
+influenza virus
+jamestown canyon virus
+japanese encephalitis virus
+jc virus
+junin virus
+kaposi sarcoma-associated herpesvirus
+ki polyomavirus
+klassevirus
+kyasanur forest disease virus
+la crosse virus
+langya virus
+lassa virus
+louping ill virus
+lujo virus
+lymphocytic choriomeningitis virus
+machupo virus
+madariaga virus
+marburg virus
+mayaro virus
+measles virus
+merkel cell polyomavirus
+mers-cov
+middelburg virus
+middle east respiratory syndrome coronavirus
+modoc virus
+mojiang virus
+molluscum contagiosum virus
+monkeypox virus
+mucambo virus
+mumps virus
+murray valley encephalitis virus
+ndumu virus
 newcastle disease virus
-avian influenza virus
+nipah virus
+norovirus
+o'nyong'nyong virus
+omsk hemorrhagic fever virus
+oropouche virus
+papilloma and polyoma viruses
+parainfluenza virus
+parechovirus a
+parvovirus b19
+pixuna virus
+poliovirus
+powassan virus
+poxvirus
+rabies virus
+respiratory syncytial virus
+reston ebolavirus
+rhinovirus
+rhinovirus a
+rhinovirus b
+rhinovirus c
+rift valley fever virus
+rio bravo virus
+rio negro virus
+rocio virus
+ross river virus
+rotavirus
+rotavirus a
+rotavirus b
+rotavirus c
+rubella virus
+sabia virus
+saffold virus
+saint louis encephalitis virus
+salivirus
+salmon pancreas disease virus
+sapovirus
+sars-cov
+sars-cov-2
+schmallenberg virus
+semliki forest virus
+seoul virus
+severe acute respiratory syndrome coronavirus
+severe acute respiratory syndrome coronavirus 2
+sin nombre virus
+sindbis virus
+sleeping disease virus
+southern elephant seal virus
+sudan ebolavirus
+tai forest alphavirus
+tai forest ebolavirus
+tick-borne encephalitis virus
+tonate virus
+torque teno virus
+toscana virus
+trichodysplasia spinulosa polyomavirus
+trocara virus
+una virus
+usutu virus
+vaccinia virus
+varicella-zoster virus
+variola virus
+venezuelan equine encephalitis virus
+vesicular stomatitis virus
+west nile virus
+western equine encephalitis virus
+whataroa virus
+wu polyomavirus
+yellow fever virus
+zaire ebolavirus
+zika virus

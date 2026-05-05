@@ -11,12 +11,14 @@ Usage
 
 from __future__ import annotations
 
+import sys
 import argparse
 import asyncio
 import logging
-from datetime import date
-
+import pathlib
 import httpx
+
+from datetime import date
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
 from apecx_harvesters.loaders.base import RateLimiter
@@ -24,6 +26,7 @@ from apecx_harvesters.loaders.emdb import EMDBHarvester
 from apecx_harvesters.loaders.emdb.constants import rate_limit as _EMDB_RATE_LIMIT
 from apecx_harvesters.loaders.emdb.search import count as emdb_count
 from apecx_harvesters.loaders.emdb.search import search as emdb_search
+from apecx_harvesters.loaders.iedb import IEDBHarvester
 from apecx_harvesters.loaders.pdb import PDBHarvester
 from apecx_harvesters.loaders.pdb.constants import rate_limit as _PDB_RATE_LIMIT
 from apecx_harvesters.loaders.pdb.search import SearchQuery
@@ -40,10 +43,10 @@ logger = logging.getLogger(__name__)
 
 
 async def _count_results(
-    term: str,
-    begin_year: int | None,
-    end_year: int | None,
-    api_key: str | None,
+        term: str,
+        begin_year: int | None,
+        end_year: int | None,
+        api_key: str | None,
 ) -> None:
     if begin_year is not None or end_year is not None:
         start = begin_year or 1800
@@ -59,17 +62,22 @@ async def _count_results(
         emdb_count(term),
     )
 
-    print(f"  pubmed: {pubmed_n:,}")
-    print(f"     pdb: {pdb_n:,}")
-    print(f"    emdb: {emdb_n:,}")
+    logger.debug(f"  pubmed: {pubmed_n:,}")
+    logger.debug(f"     pdb: {pdb_n:,}")
+    logger.debug(f"    emdb: {emdb_n:,}")
 
 
 async def _run(
-    term: str,
-    begin_year: int | None,
-    end_year: int | None,
-    api_key: str | None,
+        term: str,
+        begin_year: int | None,
+        end_year: int | None,
+        api_key: str | None,
+        cache_root: pathlib.Path,
 ) -> None:
+    logger.debug("Search Term: %s", term)
+    logger.debug("Begin Year: %s", begin_year)
+    logger.debug("End Year: %s", end_year)
+
     if begin_year is not None or end_year is not None:
         start = begin_year or 1800
         end = end_year or date.today().year
@@ -78,19 +86,30 @@ async def _run(
         pubmed_term = term
     pdb_query = SearchQuery.full_text(term)
 
+    logger.debug("PubMed Term: %s", pubmed_term)
+    logger.debug("PDB Term: %s", pdb_query)
+
     pubmed_rate = _PUBMED_RATE_LIMIT_WITH_KEY if api_key is not None else _PUBMED_RATE_LIMIT
     pubmed_limiter = RateLimiter(pubmed_rate, name="pubmed")
     pdb_limiter = RateLimiter(_PDB_RATE_LIMIT, name="pdb")
     emdb_limiter = RateLimiter(_EMDB_RATE_LIMIT, name="emdb")
 
     async with httpx.AsyncClient() as client:
-        pubmed = PubMedHarvester(client=client, rate_limiter=pubmed_limiter, api_key=api_key)
-        pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter)
-        emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter)
+        pubmed = PubMedHarvester(
+            client=client,
+            rate_limiter=pubmed_limiter,
+            api_key=api_key,
+            cache_root=cache_root,
+        )
+        pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter, cache_root=cache_root)
+        emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter, cache_root=cache_root)
+        iedb = IEDBHarvester(client=client, cache_root=cache_root)
 
         await run_parallel(
             PipelineSpec(
-                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter, api_key=api_key)),
+                source=pubmed.iter_results(
+                    pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter, api_key=api_key)
+                ),
                 sink=report("pubmed"),
                 name="pubmed",
             ),
@@ -104,7 +123,13 @@ async def _run(
                 sink=report("emdb"),
                 name="emdb",
             ),
+            PipelineSpec(
+                source=iedb.iter_query_results(term),
+                sink=report("iedb"),
+                name="iedb",
+            ),
         )
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -152,21 +177,41 @@ def main() -> None:
         help="Report the number of matches per source without scraping any records.",
     )
     parser.add_argument(
+        "--output",
+        "--cache-root",
+        dest="cache_root",
+        default=".cache",
+        metavar="DIR",
+        help="Directory where fetched records are cached (default: %(default)s).",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         default=False,
         help="Enable debug logging (rate limiter timing, HTTP details).",
     )
+
     args = parser.parse_args()
+
     if (args.term is None) == (args.file is None):
         parser.error("Exactly one of --term or --file is required.")
-
     begin, end = args.begin_year, args.end_year
     if begin is not None and end is not None and begin > end:
         begin, end = end, begin
+    cache_root = pathlib.Path(args.cache_root)
+    try:
+        cache_root.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logger.error(f"Cache folder cannot be created: {e}")
+        sys.exit(1)
 
-    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
+    logging.basicConfig(
+        level=log_level,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        force=True,
+    )
+    logger.setLevel(log_level)
     logging.getLogger("apecx_harvesters").setLevel(log_level)
 
     if args.term:
@@ -176,12 +221,11 @@ def main() -> None:
             terms = [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
     for term in terms:
-        print(term)
         if args.dry_run:
             asyncio.run(_count_results(term, begin, end, args.api_key))
         else:
             logger.info("Searching: %s", term)
-            asyncio.run(_run(term, begin, end, args.api_key))
+            asyncio.run(_run(term, begin, end, args.api_key, cache_root))
 
 
 if __name__ == "__main__":

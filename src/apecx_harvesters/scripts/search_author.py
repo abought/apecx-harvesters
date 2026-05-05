@@ -12,10 +12,11 @@ Usage
 
 from __future__ import annotations
 
+import sys
 import argparse
 import asyncio
 import logging
-
+import pathlib
 import httpx
 
 import apecx_harvesters.loaders  # noqa: F401  — register all harvester subclasses
@@ -39,11 +40,43 @@ from apecx_harvesters.pipeline import PipelineSpec, report, run_parallel
 logger = logging.getLogger(__name__)
 
 
+def _optional_field(value: str) -> str | None:
+    value = value.strip()
+    if value in {"", '""'}:
+        return None
+    return value
+
+
+def _parse_author_file_line(line: str) -> tuple[str | None, str | None, str | None]:
+    parts = line.rstrip("\n\r").split("\t")
+    if len(parts) == 1:
+        author = _optional_field(parts[0])
+        orcid = None
+        institution = None
+    elif len(parts) == 2:
+        author = _optional_field(parts[0])
+        orcid = _optional_field(parts[1])
+        institution = None
+    elif len(parts) == 3:
+        author = _optional_field(parts[0])
+        orcid = _optional_field(parts[1])
+        institution = _optional_field(parts[2])
+    else:
+        raise ValueError(
+            f"Expected 1, 2, or 3 tab-separated columns, got {len(parts)}"
+        )
+
+    if author is None and orcid is None:
+        raise ValueError("Each row must provide at least name or orcid")
+
+    return author, orcid, institution
+
+
 async def _count_results(
-    author: str | None,
-    orcid: str | None,
-    institution: str | None,
-    api_key: str | None,
+        author: str | None,
+        orcid: str | None,
+        institution: str | None,
+        api_key: str | None,
 ) -> None:
     pdb_query = SearchQuery.by_author(author, orcid=orcid, institution=institution)
     pubmed_term = pubmed_author_term(author, orcid=orcid)
@@ -60,21 +93,30 @@ async def _count_results(
     pubmed_n, pdb_n = results[0], results[1]
     emdb_n = results[2] if emdb_term is not None else None
 
-    print(f"  pubmed: {pubmed_n:,}")
-    print(f"     pdb: {pdb_n:,}")
+    logger.debug(f"  pubmed: {pubmed_n:,}")
+    logger.debug(f"     pdb: {pdb_n:,}")
     if emdb_n is not None:
-        print(f"    emdb: {emdb_n:,}")
+        logger.debug(f"    emdb: {emdb_n:,}")
 
 
 async def _run(
-    author: str | None,
-    orcid: str | None,
-    institution: str | None,
-    api_key: str | None,
+        author: str | None,
+        orcid: str | None,
+        institution: str | None,
+        api_key: str | None,
+        cache_root: pathlib.Path,
 ) -> None:
+    logger.debug("Author: %s", author)
+    logger.debug("ORCID: %s", orcid)
+    logger.debug("Institution: %s", institution)
+
     pdb_query = SearchQuery.by_author(author, orcid=orcid, institution=institution)
     pubmed_term = pubmed_author_term(author, orcid=orcid)
     emdb_term = emdb_author_term(author, orcid=orcid) if (author is not None or orcid is not None) else None
+
+    logger.debug("PubMed Term: %s", pubmed_term)
+    logger.debug("PDB Term: %s", pdb_query)
+    logger.debug("EMDB Term: %s", emdb_term)
 
     pubmed_rate = _PUBMED_RATE_LIMIT_WITH_KEY if api_key is not None else _PUBMED_RATE_LIMIT
     pubmed_limiter = RateLimiter(pubmed_rate, name="pubmed")
@@ -82,13 +124,20 @@ async def _run(
     emdb_limiter = RateLimiter(_EMDB_RATE_LIMIT, name="emdb")
 
     async with httpx.AsyncClient() as client:
-        pubmed = PubMedHarvester(client=client, rate_limiter=pubmed_limiter, api_key=api_key)
-        pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter)
-        emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter)
+        pubmed = PubMedHarvester(
+            client=client,
+            rate_limiter=pubmed_limiter,
+            api_key=api_key,
+            cache_root=cache_root,
+        )
+        pdb = PDBHarvester(client=client, rate_limiter=pdb_limiter, cache_root=cache_root)
+        emdb = EMDBHarvester(client=client, rate_limiter=emdb_limiter, cache_root=cache_root)
 
         specs = [
             PipelineSpec(
-                source=pubmed.iter_results(pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter, api_key=api_key)),
+                source=pubmed.iter_results(
+                    pubmed_search(pubmed_term, client=client, rate_limiter=pubmed_limiter, api_key=api_key)
+                ),
                 sink=report("pubmed"),
                 name="pubmed",
             ),
@@ -121,7 +170,11 @@ def main() -> None:
         "--file",
         default=None,
         metavar="FILE",
-        help="Text file with one author name per line. Mutually exclusive with --author/--orcid.",
+        help=(
+            "Tab-separated file with 1, 2, or 3 columns: name; name and orcid; "
+            "or name, orcid, and institution. Use empty fields or \"\" for missing values. "
+            "Mutually exclusive with --author/--orcid."
+        ),
     )
     parser.add_argument(
         "--orcid",
@@ -156,40 +209,77 @@ def main() -> None:
         help="Report the number of matches per source without scraping any records.",
     )
     parser.add_argument(
+        "--output",
+        "--cache-root",
+        dest="cache_root",
+        default=".cache",
+        metavar="DIR",
+        help="Directory where fetched records are cached (default: %(default)s).",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         default=False,
         help="Enable debug logging (rate limiter timing, HTTP details).",
     )
+
     args = parser.parse_args()
+
     using_file = args.file is not None
     using_single = args.author is not None or args.orcid is not None
     if using_file and using_single:
         parser.error("--file is mutually exclusive with --author/--orcid.")
     if not using_file and not using_single:
         parser.error("At least one of --author, --orcid, or --file is required.")
+    cache_root = pathlib.Path(args.cache_root)
+    try:
+        cache_root.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logger.error(f"Cache folder cannot be created: {e}")
+        sys.exit(1)
 
-    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     log_level = logging.DEBUG if args.debug else logging.INFO
+    logging.basicConfig(
+        level=log_level,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        force=True,
+    )
+    logger.setLevel(log_level)
     logging.getLogger("apecx_harvesters").setLevel(log_level)
 
     if using_file:
         with open(args.file) as f:
-            authors = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-        for author in authors:
-            print(author)
+            queries = []
+            for lineno, line in enumerate(f, start=1):
+                if not line.strip() or line.lstrip().startswith("#"):
+                    continue
+                try:
+                    queries.append(_parse_author_file_line(line))
+                except ValueError as exc:
+                    parser.error(f"{args.file}:{lineno}: {exc}")
+
+        for author, orcid, institution in queries:
+            label = author or orcid or ""
+            if institution:
+                label = f"{label} [{institution}]"
+            logger.debug(label)
             if args.dry_run:
-                asyncio.run(_count_results(author, None, None, args.api_key))
+                asyncio.run(_count_results(author, orcid, institution, args.api_key))
             else:
-                logger.info("Searching: %s", author)
-                asyncio.run(_run(author, None, None, args.api_key))
+                logger.info(
+                    "Searching author query: author=%r orcid=%r institution=%r",
+                    author,
+                    orcid,
+                    institution,
+                )
+                asyncio.run(_run(author, orcid, institution, args.api_key, cache_root))
     else:
         if args.dry_run:
             label = args.author or args.orcid or ""
-            print(label)
+            logger.debug(label)
             asyncio.run(_count_results(args.author, args.orcid, args.institution, args.api_key))
         else:
-            asyncio.run(_run(args.author, args.orcid, args.institution, args.api_key))
+            asyncio.run(_run(args.author, args.orcid, args.institution, args.api_key, cache_root))
 
 
 if __name__ == "__main__":
