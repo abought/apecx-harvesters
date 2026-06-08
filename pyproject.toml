@@ -27,6 +27,11 @@ packages = ["src/apecx_harvesters"]
 [tool.uv]
 package = true
 
+[tool.uv.workspace]
+members = [
+    "search_demo/search-mcp",
+]
+
 [tool.ruff]
 line-length = 100
 exclude = ["prior_art"]

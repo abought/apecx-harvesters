@@ -16,5 +16,5 @@ for _pkg in pkgutil.iter_modules([str(Path(__file__).parent)]):
 
 from .base.registry import SchemaRegistry as _SchemaRegistry  # noqa: E402
 
-get_combined_schema = _SchemaRegistry.combined_json_schema
-get_query_schema = _SchemaRegistry.query_json_schema
+get_combined_schema = lambda: _SchemaRegistry.combined_json_schema
+get_query_schema = lambda: _SchemaRegistry.query_json_schema()
